@@ -67,10 +67,7 @@ const ForgotPasswordPage = () => {
       const payload = { email, otp };
       const res = await axios.post(api+"/user/resetpassword", payload, { withCredentials: true });
       const token = Cookies.get("BC-Traders");
-      const role = Cookies.get("role");
-      setRole(role);
       setAuthUser(token);
-      localStorage.setItem("BC-Traders", token);
       navigate("/");
     } catch (error) {
       console.log(error);

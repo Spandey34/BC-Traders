@@ -49,7 +49,6 @@ const SignupPage = () => {
     } 
     try {
       const res = await axios.post(api+"/user/signup",payload, {withCredentials: true});
-      console.log(res.data);
     } catch (error) {
       console.log(error);
       setError("Failed to send OTP. Please try again.");
@@ -67,7 +66,6 @@ const SignupPage = () => {
       const res = await axios.post(api+"/user/signup/verify", payload, { withCredentials: true });
       const token = Cookies.get("BC-Traders");
       setAuthUser(token);
-      localStorage.setItem("BC-Traders", token);
       navigate("/");
     } catch (error) {
       console.log(error);

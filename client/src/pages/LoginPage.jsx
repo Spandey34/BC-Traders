@@ -19,7 +19,6 @@ const LoginPage = () => {
           const res = await axios.post(api+"/user/login", payload, { withCredentials: true });
           const token = Cookies.get("BC-Traders");
           setAuthUser(token);
-          localStorage.setItem("BC-Traders", token);
           navigate("/");
           window.location.reload();
           console.log(token);
