@@ -12,6 +12,7 @@ const LoginPage = () => {
     const[password, setPassword] = useState("");
 
     const handleLogin = async (e) => {
+        e.preventDefault();
         const payload = { email, password };
 
         try {
@@ -19,6 +20,7 @@ const LoginPage = () => {
           const token = Cookies.get("BC-Traders");
           setAuthUser(token);
           navigate("/");
+          window.location.reload();
         } catch (error) {
           console.log(error);
           alert("Login failed. Please check your credentials and try again.");
