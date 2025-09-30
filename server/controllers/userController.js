@@ -56,8 +56,8 @@ const signup = async (req,res) => {
         const secretKey = process.env.JWT_SECRET;
 
         const token = jwt.sign({user: {id: user._id}}, secretKey);
-        res.cookie("BC-Traders", token);
-        res.cookie("role", user.role);
+        res.cookie("BC-Traders", token, {sameSite: 'None', secure: true});
+        res.cookie("role", user.role, {sameSite: 'None', secure: true});
         return res.status(201).json({message: "User Created Successfully", role: "user"});
 
     } catch (error) {
@@ -82,8 +82,8 @@ const login = async (req,res) => {
         const user = await User.findOne({email}).select("-password");
         const secretKey = process.env.JWT_SECRET;
         const token = jwt.sign({user: {id: user._id}}, secretKey);
-        res.cookie("BC-Traders", token);
-        res.cookie("role", checkUser.role);
+        res.cookie("BC-Traders", token, {sameSite: 'None', secure: true});
+        res.cookie("role", checkUser.role, {sameSite: 'None', secure: true});
         return res.status(200).json({message: "Login Successful", role: checkUser.role});
     } catch (error) {
         console.log(error);
@@ -133,8 +133,8 @@ const resetPassword = async (req,res) => {
         const user = await User.findOne({email}).select("-password");
 
         const token = jwt.sign({user: {id: user._id}}, process.env.JWT_SECRET);
-        res.cookie("BC-Traders", token);
-        res.cookie("role", user.role);
+        res.cookie("BC-Traders", token, {sameSite: 'None', secure: true});
+        res.cookie("role", user.role, {sameSite: 'None', secure: true});
         return res.status(200).json({message: "OTP Verified"});
     }
     catch (error) 
