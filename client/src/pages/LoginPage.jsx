@@ -20,8 +20,6 @@ const LoginPage = () => {
           const token = Cookies.get("BC-Traders");
           setAuthUser(token);
           navigate("/");
-          window.location.reload();
-          console.log(token);
         } catch (error) {
           console.log(error);
           alert("Login failed. Please check your credentials and try again.");
