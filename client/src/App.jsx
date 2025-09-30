@@ -16,9 +16,9 @@ export default function App() {
           <ThemeBotton />
             <Routes>
               <Route path="/" element={authUser ? <>{role=="admin" ? <AdminHomePage /> : <UserHomePage />} </>: <LoginPage />} />
-              <Route path="/login" element={authUser ? <>{role=="admin" ? <Navigate to={"/admin"} /> : <Navigate to={"/user"} />} </>: <LoginPage />} />
-              <Route path="/signup" element={authUser ? <>{role=="admin" ? <Navigate to={"/admin"} /> : <Navigate to={"/user"} />} </>: <SignupPage />} />
-              <Route path="/forgotpassword" element={authUser ? <>{role=="admin" ? <Navigate to={"/admin"} /> : <Navigate to={"/user"} />} </>: <ForgotPasswordPage />} />
+              <Route path="/login" element={authUser ? <Navigate to={"/"} />: <LoginPage />} />
+              <Route path="/signup" element={authUser ? <Navigate to={"/"} />: <SignupPage />} />
+              <Route path="/forgotpassword" element={authUser ? <Navigate to={"/"} />: <ForgotPasswordPage />} />
             </Routes>
         </div>
     );
