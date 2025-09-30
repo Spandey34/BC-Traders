@@ -12,7 +12,6 @@ const LoginPage = () => {
     const[password, setPassword] = useState("");
 
     const handleLogin = async (e) => {
-        e.preventDefault();
         const payload = { email, password };
 
         try {

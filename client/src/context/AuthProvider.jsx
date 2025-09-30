@@ -7,14 +7,13 @@ import { api } from '../api/api';
 export const AuthContext = createContext();
 
 export const AuthProvider = ({children}) => {
-    const initialUserState = Cookies.get("BC-Traders") || localStorage.getItem("BC-Traders") || undefined;
+    const initialUserState = Cookies.get("BC-Traders");
 
     const [authUser, setAuthUser] = useState(initialUserState ? initialUserState : undefined);
     const[role, setRole] = useState("");
     useEffect(() => {
       if(authUser)
       {
-        localStorage.setItem("BC-Traders", authUser);
         const fetchRole = async () => {
           try {
             const payload = { token: authUser };
