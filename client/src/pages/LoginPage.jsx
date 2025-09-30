@@ -12,7 +12,6 @@ const LoginPage = () => {
     const[password, setPassword] = useState("");
 
     const handleLogin = async (e) => {
-        e.preventDefault();
         const payload = { email, password };
 
         try {
@@ -20,6 +19,7 @@ const LoginPage = () => {
           const token = Cookies.get("BC-Traders");
           setAuthUser(token);
           localStorage.setItem("BC-Traders", token);
+          console.log(token);
           navigate("/");
         } catch (error) {
           console.log(error);
