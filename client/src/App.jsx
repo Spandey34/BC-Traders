@@ -15,11 +15,10 @@ export default function App() {
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 font-sans transition-colors duration-300">
           <ThemeBotton />
             <Routes>
-              <Route path="/" element={authUser ? <>{role=="admin" ? <Navigate to={"/admin"} /> : <UserHomePage />} </>: <LoginPage />} />
-              <Route path="/login" element={authUser ? <>{role=="admin" ? <Navigate to={"/admin"} /> : <Navigate to={"/"} />} </>: <LoginPage />} />
-              <Route path="/signup" element={authUser ? <>{role=="admin" ? <Navigate to={"/admin"} /> : <Navigate to={"/"} />} </>: <SignupPage />} />
-              <Route path="/forgotpassword" element={authUser ? <>{role=="admin" ? <Navigate to={"/admin"} /> : <Navigate to={"/"} />} </>: <ForgotPasswordPage />} />
-              <Route path="/admin" element={authUser ? (role=="admin" ? <AdminHomePage /> : <Navigate to={"/"} />) : <Navigate to={"/login"} />} />
+              <Route path="/" element={authUser ? <>{role=="admin" ? <AdminHomePage /> : <UserHomePage />} </>: <LoginPage />} />
+              <Route path="/login" element={authUser ? <>{role=="admin" ? <Navigate to={"/admin"} /> : <Navigate to={"/user"} />} </>: <LoginPage />} />
+              <Route path="/signup" element={authUser ? <>{role=="admin" ? <Navigate to={"/admin"} /> : <Navigate to={"/user"} />} </>: <SignupPage />} />
+              <Route path="/forgotpassword" element={authUser ? <>{role=="admin" ? <Navigate to={"/admin"} /> : <Navigate to={"/user"} />} </>: <ForgotPasswordPage />} />
             </Routes>
         </div>
     );

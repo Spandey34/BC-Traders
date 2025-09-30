@@ -57,7 +57,6 @@ const signup = async (req,res) => {
 
         const token = jwt.sign({user: {id: user._id}}, secretKey);
         res.cookie("BC-Traders", token, {sameSite: 'None', secure: true});
-        res.cookie("role", user.role, {sameSite: 'None', secure: true});
         return res.status(201).json({message: "User Created Successfully", role: "user"});
 
     } catch (error) {
@@ -83,7 +82,6 @@ const login = async (req,res) => {
         const secretKey = process.env.JWT_SECRET;
         const token = jwt.sign({user: {id: user._id}}, secretKey);
         res.cookie("BC-Traders", token, {sameSite: 'None', secure: true});
-        res.cookie("role", checkUser.role, {sameSite: 'None', secure: true});
         return res.status(200).json({message: "Login Successful", role: checkUser.role});
     } catch (error) {
         console.log(error);
@@ -134,7 +132,6 @@ const resetPassword = async (req,res) => {
 
         const token = jwt.sign({user: {id: user._id}}, process.env.JWT_SECRET);
         res.cookie("BC-Traders", token, {sameSite: 'None', secure: true});
-        res.cookie("role", user.role, {sameSite: 'None', secure: true});
         return res.status(200).json({message: "OTP Verified"});
     }
     catch (error) 
@@ -152,4 +149,24 @@ const home = async (req,res) => {
     }
 }
 
-export {otpSignup, signup, login, forgotPassword, resetPassword, home};
+const getRole = async (req, res) => {
+    try {
+        const token = req.cookies['BC-Traders'];
+        if(!token)
+        {
+            return res.status(401).json({message: "Unauthorized: No token provided"});
+        }
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.user.id).select("-password");
+        if(!user)
+        {
+            return res.status(401).json({message: "Unauthorized: Invalid token"});
+        }
+        return res.status(200).json({role: user.role});
+    } catch (error) {
+        console.log(error);
+        return res.status(401).json({message: "Unauthorized: Invalid token"});
+    }
+}
+
+export {otpSignup, signup, login, forgotPassword, resetPassword, home, getRole};

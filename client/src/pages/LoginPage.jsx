@@ -16,15 +16,11 @@ const LoginPage = () => {
         const payload = { email, password };
 
         try {
-          const res = await axios.post(api+"/login", payload, { withCredentials: true });
+          const res = await axios.post(api+"/user/login", payload, { withCredentials: true });
           const token = Cookies.get("BC-Traders");
           setAuthUser(token);
-          setRole(res.data.role);
-          if(role == "admin") {
-            navigate("/admin");
-          } else {
-            navigate("/");
-          }
+          localStorage.setItem("BC-Traders", token);
+          navigate("/");
         } catch (error) {
           console.log(error);
           alert("Login failed. Please check your credentials and try again.");

@@ -23,7 +23,7 @@ app.use(cors({
 
 connectDB();
 
-app.use('/',userRoutes);
+app.use('/user',userRoutes);
 app.use('/admin', adminMiddleware, adminRoutes)
 
 app.listen(PORT, () => {

@@ -46,7 +46,7 @@ const ForgotPasswordPage = () => {
       email
     } 
     try {
-      const res = await axios.post(api+"/forgotpassword",payload, {withCredentials: true});
+      const res = await axios.post(api+"/user/forgotpassword",payload, {withCredentials: true});
       console.log(res.data);
     } catch (error) {
       console.log(error);
@@ -65,11 +65,13 @@ const ForgotPasswordPage = () => {
 
     try {
       const payload = { email, otp };
-      const res = await axios.post(api+"/resetpassword", payload, { withCredentials: true });
+      const res = await axios.post(api+"/user/resetpassword", payload, { withCredentials: true });
       const token = Cookies.get("BC-Traders");
       const role = Cookies.get("role");
       setRole(role);
       setAuthUser(token);
+      localStorage.setItem("BC-Traders", token);
+      navigate("/");
     } catch (error) {
       console.log(error);
       setError("OTP verification failed. Please try again.");
