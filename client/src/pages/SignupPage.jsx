@@ -17,7 +17,7 @@ const SignupPage = () => {
   const [timer, setTimer] = useState(30);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const [authUser, setAuthUser, role, setRole] = useAuth();
+  const [authUser, setAuthUser] = useAuth();
 
   useEffect(() => {
     if (password && confirmPassword) {
@@ -64,7 +64,6 @@ const SignupPage = () => {
     try {
       const payload = { name, email, password, otp };
       const res = await axios.post(api+"/user/signup/verify", payload, { withCredentials: true });
-      const token = Cookies.get("BC-Traders");
       setAuthUser(token);
       navigate("/");
     } catch (error) {

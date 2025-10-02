@@ -7,9 +7,9 @@ import Cookies from "js-cookie";
 
 const LoginPage = () => {
     const navigate = useNavigate();
-    const [authUser, setAuthUser, role, setRole] = useAuth();
     const[email, setEmail] = useState("");
     const[password, setPassword] = useState("");
+    const [authUser, setAuthUser] = useAuth();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -17,9 +17,8 @@ const LoginPage = () => {
 
         try {
           const res = await axios.post(api+"/user/login", payload, { withCredentials: true });
-          const token = Cookies.get("BC-Traders");
-          setAuthUser(token);
-          navigate("/hello");
+          setAuthUser(res.data.user);
+          navigate("/");
         } catch (error) {
           console.log(error);
           alert("Login failed. Please check your credentials and try again.");

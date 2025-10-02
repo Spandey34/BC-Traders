@@ -54,10 +54,11 @@ const signup = async (req,res) => {
             name,email,password: hasedPassword
         });
         const secretKey = process.env.JWT_SECRET;
+        const newUser = await User.findOne({email}).select("-password");
 
         const token = jwt.sign({user: {id: user._id}}, secretKey);
-        res.cookie("BC-Traders", token, {sameSite: 'None', secure: true});
-        return res.status(201).json({message: "User Created Successfully", role: "user"});
+        res.cookie("jwt", token, {httpOnly: true, sameSite: 'None', secure: true});
+        return res.status(201).json({message: "User Created Successfully", user: newUser});
 
     } catch (error) {
         console.log(error);
@@ -81,8 +82,8 @@ const login = async (req,res) => {
         const user = await User.findOne({email}).select("-password");
         const secretKey = process.env.JWT_SECRET;
         const token = jwt.sign({user: {id: user._id}}, secretKey);
-        res.cookie("BC-Traders", token, {sameSite: 'None', secure: true});
-        return res.status(200).json({message: "Login Successful", role: checkUser.role});
+        res.cookie("jwt", token, {httpOnly: true, sameSite: 'None', secure: true});
+        return res.status(200).json({message: "Login Successful", user: user});
     } catch (error) {
         console.log(error);
         return res.status(500).json({message: "Server Error"});
@@ -131,8 +132,8 @@ const resetPassword = async (req,res) => {
         const user = await User.findOne({email}).select("-password");
 
         const token = jwt.sign({user: {id: user._id}}, process.env.JWT_SECRET);
-        res.cookie("BC-Traders", token, {sameSite: 'None', secure: true});
-        return res.status(200).json({message: "OTP Verified"});
+        res.cookie("jwt", token, {httpOnly: true, sameSite: 'None', secure: true});
+        return res.status(200).json({message: "OTP Verified", user: user});
     }
     catch (error) 
     {
@@ -149,9 +150,9 @@ const home = async (req,res) => {
     }
 }
 
-const getRole = async (req, res) => {
+const userDetails = async (req,res) => {
     try {
-        const token = req.cookies['BC-Traders'];
+        const token = req.cookies.jwt;
         if(!token)
         {
             return res.status(401).json({message: "Unauthorized: No token provided"});
@@ -162,11 +163,11 @@ const getRole = async (req, res) => {
         {
             return res.status(401).json({message: "Unauthorized: Invalid token"});
         }
-        return res.status(200).json({role: user.role});
+        return res.status(200).json({user});
     } catch (error) {
         console.log(error);
         return res.status(401).json({message: "Unauthorized: Invalid token"});
     }
 }
 
-export {otpSignup, signup, login, forgotPassword, resetPassword, home, getRole};
+export {otpSignup, signup, login, forgotPassword, resetPassword, home, userDetails};

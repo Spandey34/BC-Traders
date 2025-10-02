@@ -7,27 +7,22 @@ import { api } from '../api/api';
 export const AuthContext = createContext();
 
 export const AuthProvider = ({children}) => {
-    const initialUserState = Cookies.get("BC-Traders");
 
-    const [authUser, setAuthUser] = useState(initialUserState ? initialUserState : undefined);
-    const[role, setRole] = useState("");
+    const [authUser, setAuthUser] = useState(undefined);
     useEffect(() => {
-      if(authUser)
-      {
         const fetchRole = async () => {
           try {
-            const payload = { token: authUser };
-            const res = await axios.post(api+"/user/getrole",payload, { withCredentials: true });
-            setRole(res.data.role);
+            const payload = {};
+            const res = await axios.post(api+"/user/userDetails",payload, { withCredentials: true});
+            setAuthUser(res.data.user);
           } catch (error) {
             console.log(error);
           }
         };
         fetchRole();
-      }
-    }, [authUser, role]);
+    },[]);
   return (
-    <AuthContext.Provider value={[authUser, setAuthUser, role, setRole]} >
+    <AuthContext.Provider value={[authUser, setAuthUser]} >
         {children}
     </AuthContext.Provider>
   )
