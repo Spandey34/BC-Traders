@@ -12,7 +12,6 @@ const LoginPage = () => {
     const [authUser, setAuthUser] = useAuth();
 
     const handleLogin = async (e) => {
-        e.preventDefault();
         const payload = { email, password };
 
         try {

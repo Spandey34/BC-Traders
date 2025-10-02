@@ -13,7 +13,7 @@ const ForgotPasswordPage = () => {
   const [timer, setTimer] = useState(30);
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
-  const [authUser, setAuthUser, role, setRole] = useAuth();
+  const [authUser, setAuthUser] = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,7 +34,6 @@ const ForgotPasswordPage = () => {
       }, 1000);
     } else if (timer === 0) {
       // Allow resend
-      setOtpSent(false);
       setError("");
     }
     return () => clearInterval(interval);
@@ -42,6 +41,7 @@ const ForgotPasswordPage = () => {
 
   const handleSendOtp = async (e) => {
     e.preventDefault();
+    setOtpSent(true);
     const payload = {
       email
     } 
@@ -52,10 +52,10 @@ const ForgotPasswordPage = () => {
       console.log(error);
       setError("Failed to send OTP. Please check mail again.");
       setTimer(30); 
+      setOtpSent(false);
       return;
     }
-
-    setOtpSent(true);
+    
     setNotification("OTP sent successfully!");
     setTimer(30); 
     setError("");
@@ -66,8 +66,7 @@ const ForgotPasswordPage = () => {
     try {
       const payload = { email, otp };
       const res = await axios.post(api+"/user/resetpassword", payload, { withCredentials: true });
-      const token = Cookies.get("BC-Traders");
-      setAuthUser(token);
+      setAuthUser(res.data.user);
       navigate("/");
     } catch (error) {
       console.log(error);

@@ -34,14 +34,14 @@ const SignupPage = () => {
         setTimer((prevTimer) => prevTimer - 1);
       }, 1000);
     } else if (timer === 0) {
-      setOtpRequested(false);
-      setTimer(30);
+      
     }
     return () => clearInterval(interval);
   }, [otpRequested, timer]);
 
   const handleRequestOtp = async (e) => {
     e.preventDefault();
+    setOtpRequested(true);
     const payload = {
       name,
       email,
@@ -51,20 +51,23 @@ const SignupPage = () => {
       const res = await axios.post(api+"/user/signup",payload, {withCredentials: true});
     } catch (error) {
       console.log(error);
+      alert(error.response.data.message);
       setError("Failed to send OTP. Please try again.");
+      setOtpRequested(false);
       return;
     }
+    setTimer(30);
 
-    setOtpRequested(true);
+    
     setError("");
   };
 
   const handleOtpSubmit = async (otp) => {
-
+     
     try {
       const payload = { name, email, password, otp };
       const res = await axios.post(api+"/user/signup/verify", payload, { withCredentials: true });
-      setAuthUser(token);
+      setAuthUser(res.data.user);
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -152,7 +155,12 @@ const SignupPage = () => {
                 </span>
               ) : (
                 <button
-                  onClick={() => setTimer(30)}
+                  onClick={(e) => 
+                  {
+                    setTimer(30);
+                    handleRequestOtp(e);
+                  }
+                  }
                   className="font-medium text-indigo-600 hover:underline dark:text-indigo-400"
                 >
                   Resend OTP
