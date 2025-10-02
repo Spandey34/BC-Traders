@@ -12,12 +12,13 @@ const LoginPage = () => {
     const [authUser, setAuthUser] = useAuth();
 
     const handleLogin = async (e) => {
+      e.preventDefault();
         const payload = { email, password };
-
         try {
           const res = await axios.post(api+"/user/login", payload, { withCredentials: true });
           setAuthUser(res.data.user);
           navigate("/");
+          //window.location.reload();
         } catch (error) {
           console.log(error);
           alert("Login failed. Please check your credentials and try again.");

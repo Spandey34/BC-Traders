@@ -62,7 +62,6 @@ const ForgotPasswordPage = () => {
   };
 
   const handleOtpSubmit = async (otp) => {
-
     try {
       const payload = { email, otp };
       const res = await axios.post(api+"/user/resetpassword", payload, { withCredentials: true });

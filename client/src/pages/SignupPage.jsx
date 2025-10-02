@@ -1,11 +1,9 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Otp from "../components/Otp";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api/api";
 import axios from "axios";
 import { useAuth } from "../context/AuthProvider";
-import Cookies from "js-cookie";
 
 const SignupPage = () => {
   const [name, setName] = useState("");
@@ -16,6 +14,7 @@ const SignupPage = () => {
   const [otpRequested, setOtpRequested] = useState(false);
   const [timer, setTimer] = useState(30);
   const [error, setError] = useState("");
+  const [enteredOtp, setEnteredOtp] = useState("");
   const navigate = useNavigate();
   const [authUser, setAuthUser] = useAuth();
 
@@ -33,8 +32,6 @@ const SignupPage = () => {
       interval = setInterval(() => {
         setTimer((prevTimer) => prevTimer - 1);
       }, 1000);
-    } else if (timer === 0) {
-      
     }
     return () => clearInterval(interval);
   }, [otpRequested, timer]);
@@ -42,37 +39,29 @@ const SignupPage = () => {
   const handleRequestOtp = async (e) => {
     e.preventDefault();
     setOtpRequested(true);
-    const payload = {
-      name,
-      email,
-      password
-    } 
+    const payload = { name, email, password };
     try {
-      const res = await axios.post(api+"/user/signup",payload, {withCredentials: true});
+      await axios.post(api + "/user/signup", payload, { withCredentials: true });
+      setTimer(30);
+      setError("");
     } catch (error) {
       console.log(error);
-      alert(error.response.data.message);
+      alert(error.response?.data?.message || "Failed to send OTP");
       setError("Failed to send OTP. Please try again.");
       setOtpRequested(false);
-      return;
     }
-    setTimer(30);
-
-    
-    setError("");
   };
 
-  const handleOtpSubmit = async (otp) => {
-     
+  const handleOtpSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const payload = { name, email, password, otp };
-      const res = await axios.post(api+"/user/signup/verify", payload, { withCredentials: true });
+      const payload = { name, email, password, otp: enteredOtp };
+      const res = await axios.post(api + "/user/signup/verify", payload, { withCredentials: true });
       setAuthUser(res.data.user);
       navigate("/");
     } catch (error) {
       console.log(error);
       setError("OTP verification failed. Please try again.");
-      return;
     }
   };
 
@@ -81,10 +70,10 @@ const SignupPage = () => {
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-lg dark:bg-gray-800">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">
-            B.C. Traders 
+            B.C. Traders
           </h1>
           <p className="mt-2 text-m text-gray-600 dark:text-gray-400">
-             Create an Account
+            Create an Account
           </p>
         </div>
 
@@ -141,12 +130,22 @@ const SignupPage = () => {
             </button>
           </form>
         ) : (
-          <div className="flex flex-col items-center justify-center space-y-6">
+          <form
+            onSubmit={handleOtpSubmit}
+            className="flex flex-col items-center justify-center space-y-6"
+          >
             <p className="text-center text-sm text-gray-600 dark:text-gray-400">
               Enter the 6-digit code sent to your email.
             </p>
-            <Otp length={6} onComplete={handleOtpSubmit} email={email} type={"signup"}/>
+            <Otp length={6} onComplete={setEnteredOtp} />
             {error && <p className="text-sm text-red-500">{error}</p>}
+            <button
+              type="submit"
+              className="w-full py-3 font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
+              disabled={enteredOtp.length !== 6}
+            >
+              Verify OTP
+            </button>
             <div className="text-sm text-gray-600 dark:text-gray-400">
               Didn't receive code?{" "}
               {timer > 0 ? (
@@ -155,19 +154,17 @@ const SignupPage = () => {
                 </span>
               ) : (
                 <button
-                  onClick={(e) => 
-                  {
+                  onClick={(e) => {
                     setTimer(30);
                     handleRequestOtp(e);
-                  }
-                  }
+                  }}
                   className="font-medium text-indigo-600 hover:underline dark:text-indigo-400"
                 >
                   Resend OTP
                 </button>
               )}
             </div>
-          </div>
+          </form>
         )}
 
         <p className="text-sm text-center text-gray-600 dark:text-gray-400">
