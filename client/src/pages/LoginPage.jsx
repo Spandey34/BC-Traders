@@ -1,33 +1,19 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthProvider";
 import axios from "axios";
 import { api } from "../api/api";
 import Cookies from "js-cookie";
-import { SignInButton } from "@clerk/clerk-react";
+import { SignInButton, useAuth } from "@clerk/clerk-react";
 
 const LoginPage = () => {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [authUser, setAuthUser] = useAuth();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    const payload = { email, password };
-    try {
-      const res = await axios.post(api + "/user/login", payload, {
-        withCredentials: true,
-      });
-      setAuthUser(res.data.user);
-      navigate("/");
-      //window.location.reload();
-    } catch (error) {
-      console.log(error);
-      alert("Login failed. Please check your credentials and try again.");
-      return;
+  const {isSignedIn} = useAuth();
+
+  useEffect(() => {
+    if (isSignedIn) {
+      navigate("/"); // redirect to home
     }
-  };
+  }, [isSignedIn, navigate]);
   return (
     <div className="flex items-center justify-center min-h-screen px-4">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-lg dark:bg-gray-800">
