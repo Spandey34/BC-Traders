@@ -3,11 +3,8 @@ import LoginPage from './pages/LoginPage';
 import { useAuth } from './context/AuthProvider';
 import UserHomePage from './pages/user/UserHomePage';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import SignupPage from './pages/SignupPage';
 import ThemeBotton from './components/ThemeBotton';
-import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import AdminHomePage from './pages/admin/AdminHomePage';
-
 export default function App() {
     const [authUser, setAuthUser] = useAuth();
 
@@ -16,9 +13,7 @@ export default function App() {
           <ThemeBotton />
             <Routes>
               <Route path="/" element={authUser ? <>{authUser.role=="admin" ? <AdminHomePage /> : <UserHomePage />} </>: <Navigate to={"/login"} />} />
-              <Route path="/login" element={authUser ? <Navigate to={"/"} />: <LoginPage />} />
-              <Route path="/signup" element={authUser ? <Navigate to={"/"} />: <SignupPage />} />
-              <Route path="/forgotpassword" element={authUser ? <Navigate to={"/"} />: <ForgotPasswordPage />} />
+              <Route path="/login" element={authUser ? <Navigate to={"/"} />: <LoginPage/>} />
             </Routes>
         </div>
     );

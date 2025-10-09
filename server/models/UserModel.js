@@ -10,13 +10,10 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    password: {
+    clerkId: {
         type: String,
-        required: true
-    },
-    profilePic: {
-        type: String,
-        default: ""
+        required: true,
+        unique: true
     },
     role: {
         type: String,
