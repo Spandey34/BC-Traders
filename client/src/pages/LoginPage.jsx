@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { api } from "../api/api";
-import Cookies from "js-cookie";
 import { SignInButton, useAuth } from "@clerk/clerk-react";
 
 const LoginPage = () => {
 
   const {isSignedIn} = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isSignedIn) {
