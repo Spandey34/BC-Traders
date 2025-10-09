@@ -12,8 +12,7 @@ export default function App() {
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 font-sans transition-colors duration-300">
           <ThemeBotton />
             <Routes>
-              <Route path="/" element={authUser ? <>{authUser.role=="admin" ? <AdminHomePage /> : <UserHomePage />} </>: <Navigate to={"/login"} />} />
-              <Route path="/login" element={authUser ? <Navigate to={"/"} />: <LoginPage/>} />
+              <Route path="/" element={authUser ? <>{authUser.role=="admin" ? <AdminHomePage /> : <UserHomePage />} </>: <LoginPage />} />
             </Routes>
         </div>
     );

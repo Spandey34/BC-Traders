@@ -20,7 +20,6 @@ export const AuthProvider = ({children}) => {
               clerkId: user.id
             };
             const res = await axios.post(api+"/user/userDetails",payload, { withCredentials: true});
-            console.log(res);
             setAuthUser(res.data.user);
           } catch (error) {
             console.log(error);

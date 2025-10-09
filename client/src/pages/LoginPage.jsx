@@ -1,17 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { SignInButton, useAuth } from "@clerk/clerk-react";
+import { SignInButton} from "@clerk/clerk-react";
 
 const LoginPage = () => {
-
-  const {isSignedIn} = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (isSignedIn) {
-      navigate("/"); // redirect to home
-    }
-  }, [isSignedIn]);
   return (
     <div className="flex items-center justify-center min-h-screen px-4">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-lg dark:bg-gray-800">
