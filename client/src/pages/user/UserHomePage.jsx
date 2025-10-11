@@ -146,7 +146,7 @@ const CartPage = () => {
             <header className="sticky top-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm z-10 p-4 border-b border-gray-200 dark:border-gray-700">
                 <h1 className="text-xl font-bold text-gray-800 dark:text-gray-100 text-center">Shopping Cart</h1>
             </header>
-             <main className="p-4 pb-32">
+             <main className="p-4 pb-44">
                  {cartItems.length > 0 ? (
                     <div className="space-y-4">
                         {cartItems.map(item => (
@@ -173,7 +173,7 @@ const CartPage = () => {
                  )}
             </main>
             {cartItems.length > 0 && (
-                 <footer className="fixed bottom-0 left-0 md:left-64 right-0 bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700 shadow-lg">
+                 <footer className="fixed bottom-16 md:bottom-0 left-0 md:left-64 right-0 bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700 shadow-lg">
                     <div className="max-w-4xl mx-auto">
                         <div className="flex justify-between items-center mb-2">
                             <span className="text-gray-600 dark:text-gray-300">Subtotal</span>
@@ -258,7 +258,7 @@ const navItems = [
 
 
 // --- Main UserHomePage ---
-const  UserHomePage = () => {
+const UserHomePage = () => {
     const [activeTab, setActiveTab] = useState('home');
 
     const renderContent = () => {
