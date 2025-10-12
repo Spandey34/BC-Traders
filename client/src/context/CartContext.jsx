@@ -34,7 +34,7 @@ export const CartProvider = ({ children }) => {
                 }
 
                 if (cartItem.quantity > productInStock.inStockCount) {
-                    toast.warn(`Stock for ${cartItem.name} has changed. Your cart has been updated.`);
+                    toast.error(`Stock for ${cartItem.name} has changed. Your cart has been updated.`);
                     acc.push({ ...cartItem, quantity: productInStock.inStockCount });
                     cartModified = true;
                     return acc;
