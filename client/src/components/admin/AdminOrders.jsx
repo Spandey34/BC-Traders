@@ -196,7 +196,7 @@ const AdminOrders = () => {
 
     try {
       const payload = { orderId, updates };
-      await axios.post(`${api}/order/update`, payload, {
+      await axios.post(`${api}/order/updateOrder`, payload, {
         withCredentials: true,
       });
       toast.success("Order status updated!");
