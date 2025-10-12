@@ -8,11 +8,11 @@ export const ProductsContext = createContext();
 
 export const ProductsProvider = ({children}) => {
 
-    const [products, setProducts] = useState({});
+    const [products, setProducts] = useState([]);
     useEffect(() => {
         const fetchProducts = async () => {
           try {
-            const res = await axios.post(api+"/products",payload, { withCredentials: true});
+            const res = await axios.post(api+"/product",{}, { withCredentials: true});
             setProducts(res.data.products);
           } catch (error) {
             console.log(error);

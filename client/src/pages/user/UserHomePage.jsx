@@ -1,22 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
 import { useTheme } from '../../context/ThemeProvider';
 import { useCart } from '../../context/CartContext';
-import { useTab } from '../../context/ActiveTabContext';
+import { FaCartPlus, FaHome } from "react-icons/fa"
+import { GoPackage, GoPerson } from "react-icons/go"
+import { LuMoon, LuSun } from "react-icons/lu";
 
 // Import Page Components
 import Products from '../../components/Products';
 import Orders from '../../components/Orders';
 import Cart from '../../components/Cart';
 import Profile from '../../components/Profile';
-
-// Icon Components
-const HomeIcon = ({ className = "w-6 h-6" }) => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>);
-const ShoppingCartIcon = ({ className = "w-6 h-6" }) => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" /><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" /></svg>);
-const PackageIcon = ({ className = "w-6 h-6" }) => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="16.5" x2="7.5" y1="9.4" y2="9.4" /><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" /><polyline points="3.27 6.96 12 12.01 20.73 6.96" /><line x1="12" x2="12" y1="22.08" y2="12" /></svg>);
-const UserIcon = ({ className = "w-6 h-6" }) => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>);
-const SunIcon = ({ className = "w-6 h-6" }) => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>);
-const MoonIcon = ({ className = "w-6 h-6" }) => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>);
+import { useTab } from '../../context/ActiveTabContext';
 
 
 const UserHomePage = () => {
@@ -38,19 +33,19 @@ const UserHomePage = () => {
     const cartCount = cartItems.length;
     
     const navItems = [
-        { id: 'home', label: 'Home', icon: <HomeIcon /> },
-        { id: 'orders', label: 'Orders', icon: <PackageIcon /> },
+        { id: 'home', label: 'Home', icon: <FaHome /> },
+        { id: 'orders', label: 'Orders', icon: <GoPackage /> },
         { id: 'cart', label: 'Cart', icon: (
             <div className="relative">
-                <ShoppingCartIcon />
+                <FaCartPlus />
                 {cartCount > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold shadow-sm">
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center font-bold shadow-sm">
                         {cartCount}
                     </span>
                 )}
             </div>
         )},
-        { id: 'profile', label: 'Profile', icon: <UserIcon /> },
+        { id: 'profile', label: 'Profile', icon: <GoPerson /> },
     ];
 
     return (
@@ -76,7 +71,10 @@ const UserHomePage = () => {
                             }`}
                         >
                             <div className={`transition-transform duration-200 group-hover:scale-110 ${activeTab === item.id ? 'scale-110' : ''}`}>
-                                {item.icon}
+                                <div className='text-xl' >
+                                  {item.icon}  
+                                </div>
+                                
                             </div>
                             <span>{item.label}</span>
                         </button>
@@ -88,7 +86,7 @@ const UserHomePage = () => {
                         onClick={toggleTheme}
                         className="flex items-center justify-center gap-3 w-full py-3 px-4 rounded-xl bg-gray-100/50 dark:bg-gray-700/50 text-gray-600 dark:text-gray-400 hover:bg-gray-200/50 dark:hover:bg-gray-600/50 transition-all duration-200 font-medium"
                     >
-                        {theme === 'light' ? <MoonIcon /> : <SunIcon />}
+                        {theme === 'light' ? <LuMoon  /> : <LuSun />}
                         <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
                     </button>
                 </div>
@@ -110,13 +108,13 @@ const UserHomePage = () => {
                             onClick={toggleTheme}
                             className="p-2 rounded-lg bg-gray-100/50 dark:bg-gray-700/50 text-gray-600 dark:text-gray-400 hover:bg-gray-200/50 dark:hover:bg-gray-600/50 transition-colors duration-200"
                         >
-                            {theme === 'light' ? <MoonIcon className="w-5 h-5" /> : <SunIcon className="w-5 h-5" />}
+                            {theme === 'light' ? <LuMoon  className="w-5 h-5" /> : <LuSun className="w-5 h-5" />}
                         </button>
                         <div className="w-8 h-8 flex items-center justify-center">
                             <SignedIn><UserButton /></SignedIn>
                             <SignedOut>
                                 <button onClick={() => setActiveTab('profile')} className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">
-                                    <UserIcon className="w-6 h-6" />
+                                    <GoPerson className="w-8 h-8" />
                                 </button>
                             </SignedOut>
                         </div>
@@ -135,8 +133,8 @@ const UserHomePage = () => {
                             onClick={() => setActiveTab(item.id)}
                             className={`flex flex-col items-center gap-1 w-full py-2 rounded-xl transition-all duration-200 ${
                                 activeTab === item.id 
-                                    ? 'text-blue-600 dark:text-blue-400 bg-blue-50/50 dark:bg-blue-900/20' 
-                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg' 
+                                    : 'text-gray-600 dark:text-gray-400 hover:bg-white/50 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-gray-100'
                             }`}
                         >
                             <div className="relative">{item.icon}</div>

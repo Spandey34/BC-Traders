@@ -43,52 +43,24 @@ const SearchIcon = ({ className = "w-5 h-5" }) => (
 
 const Products = () => {
   // Using context instead of mock data and props
-  //const [products] = useProducts();
-  const products = [
-    {
-      id: 1,
-      name: "Premium Cotton T-Shirt",
-      price: 250.0,
-      mrp: 499.0,
-      imageUrl: "https://placehold.co/400x400/f0f0f0/333?text=T-Shirt",
-    },
-
-    {
-      id: 2,
-      name: "Denim Jeans (Bulk Pack)",
-      price: 1200.0,
-      mrp: 1999.0,
-      imageUrl: "https://placehold.co/400x400/f0f0f0/333?text=Jeans",
-    },
-
-    {
-      id: 3,
-      name: "Leather Wallets (Set of 10)",
-      price: 800.0,
-      mrp: 1500.0,
-      imageUrl: "https://placehold.co/400x400/f0f0f0/333?text=Wallets",
-    },
-
-    {
-      id: 4,
-      name: "Classic Wrist Watch",
-      price: 1500.0,
-      mrp: 2999.0,
-      imageUrl: "https://placehold.co/400x400/f0f0f0/333?text=Watch",
-    },
-  ];
+  const [products] = useProducts();
   const { addToCart } = useCart();
 
   const [searchQuery, setSearchQuery] = useState("");
 
   // --- FILTERING LOGIC ---
+
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // A check for when products are loading
   if (!products || products.length === 0) {
-    return <div className="p-6 text-center">Loading products...</div>;
+    return (
+      <div className="p-6 text-center justify-center items-center mt-[60%] text-xl">
+        Loading products...
+      </div>
+    );
   }
 
   return (
@@ -115,18 +87,31 @@ const Products = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredProducts.length > 0 ? (
             <>
-              {filteredProducts.map((product) => (
+              {filteredProducts.map((product, id) => (
                 <div
                   key={product.id}
-                  className="group bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700 hover:-translate-y-1"
+                  // ADDED: Conditional classes for disabled state
+                  className={`group bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700 transition-all duration-300 ${
+                    product.inStockCount!==0
+                      ? "hover:shadow-xl hover:-translate-y-1"
+                      : "opacity-60 grayscale"
+                  }`}
                 >
                   <div className="relative h-48 w-full overflow-hidden">
                     <img
                       src={product.imageUrl}
                       alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className={`w-full h-full object-cover transition-transform duration-300 ${
+                        product.inStockCount!==0 ? "group-hover:scale-105" : ""
+                      }`}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div
+                      className={`absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-300 ${
+                        product.inStockCount!==0
+                          ? "group-hover:opacity-100"
+                          : ""
+                      }`}
+                    ></div>
                   </div>
 
                   <div className="p-5">
@@ -138,28 +123,38 @@ const Products = () => {
                       <div className="flex flex-col">
                         <div className="flex items-center gap-2">
                           <p className="text-xl font-bold text-emerald-600 dark:text-emerald-400">
-                            ₹{product.price.toFixed(2)}
+                            ₹{product.price}
                           </p>
                           <p className="text-sm text-gray-400 line-through">
-                            ₹{product.mrp.toFixed(2)}
+                            ₹{product.mrp}
                           </p>
                         </div>
                         <div className="text-xs text-emerald-600 dark:text-emerald-400 font-medium mt-1">
-                          Save ₹{(product.mrp - product.price).toFixed(2)}
+                          Save ₹{(product.mrp - product.price)}
                         </div>
+                        <div className={``} >Available: {product.inStockCount}</div>
                       </div>
 
-                      <button
-                        onClick={() => {
-                          addToCart(product);
-                          toast.success(`${product.name} added to cart!`);
-                        }}
-                        className="flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
-                        aria-label={`Add ${product.name} to cart`}
-                      >
-                        <ShoppingCartIcon className="w-4 h-4" />
-                        Add
-                      </button>
+                      {product.inStockCount!==0 ? (
+                        <button
+                          onClick={() => {
+                            addToCart(product);
+                           
+                          }}
+                          className="flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
+                          aria-label={`Add ${product.name} to cart`}
+                        >
+                          <ShoppingCartIcon className="w-4 h-4" />
+                          Add
+                        </button>
+                      ) : (
+                        <div
+                          className="flex items-center justify-center px-4 py-2 rounded-xl font-semibold text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700 cursor-not-allowed"
+                          aria-label="Out of stock"
+                        >
+                          Out of Stock
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

@@ -3,8 +3,10 @@ import { connectDB } from './database/mongodb.js';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import userRoutes from './routes/userRoutes.js';
+import productRoutes from "./routes/productRoutes.js"
 import cookieParser from 'cookie-parser';
 import adminRoutes from './routes/adminRoutes.js';
+import orderRoutes from "./routes/orderRoutes.js"
 import adminMiddleware from './middlewares/adminMiddleware.js';
 
 dotenv.config();
@@ -22,8 +24,11 @@ app.use(cors({
 
 connectDB();
 
+
 app.use('/user',userRoutes);
 app.use('/admin', adminMiddleware, adminRoutes)
+app.use('/product',productRoutes);
+app.use("/order",orderRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

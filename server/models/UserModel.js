@@ -15,10 +15,18 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    phoneNumber: {
+        type: String,
+        default: ""
+    },
     role: {
         type: String,
         enum: ['user', 'admin'],
         default: 'user'
+    },
+    logo: {
+        type: String,
+        default: ""
     },
     orders: [{
         type: mongoose.Schema.Types.ObjectId,

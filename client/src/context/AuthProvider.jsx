@@ -17,10 +17,12 @@ export const AuthProvider = ({children}) => {
             const payload = {
               name: user.fullName,
               email: user.primaryEmailAddress.emailAddress,
-              clerkId: user.id
+              clerkId: user.id,
+              phoneNumber: user.unsafeMetadata.phoneNumber
             };
             const res = await axios.post(api+"/user/userDetails",payload, { withCredentials: true});
             setAuthUser(res.data.user);
+            console.log(authUser.role);
           } catch (error) {
             console.log(error);
           }
