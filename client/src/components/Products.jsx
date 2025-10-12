@@ -131,7 +131,7 @@ const Products = () => {
                                         </div>
                                         {product.inStockCount !== 0 ? (
                                             <button
-                                                onClick={() => { addToCart(product); toast.success(`${product.name} added!`); }}
+                                                onClick={() => { addToCart(product); }}
                                                 className="flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
                                                 aria-label={`Add ${product.name} to cart`}
                                             >
