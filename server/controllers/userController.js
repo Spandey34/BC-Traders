@@ -41,7 +41,7 @@ const userDetails = async (req, res) => {
             return res.status(401).json({ message: "Unauthorized: Not LoggedIn!" });
         }
 
-        let user = await User.find({ clerkId });
+        let user = await User.findOne({ email: email });
 
         if (!user) {
             const newUser = await User.create({
