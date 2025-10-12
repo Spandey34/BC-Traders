@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { useProducts } from "../context/ProductsProvider"; // Assuming this context exists
 import { useCart } from "../context/CartContext";
 import toast from "react-hot-toast";
+import { useProducts } from "../redux/ReduxProvider";
 
 // Icon Component
 const ShoppingCartIcon = ({ className = "w-6 h-6" }) => (

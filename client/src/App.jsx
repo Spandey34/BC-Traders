@@ -2,7 +2,7 @@ import React from "react";
 import UserHomePage from "./pages/user/UserHomePage";
 import { Toaster } from "react-hot-toast";
 import AdminHomePage from "./pages/admin/AdminHomePage";
-import { useAuth } from "./context/AuthProvider";
+import { useAuth } from "./redux/ReduxProvider";
 
 function App() {
   const [authUser, setAuthUser] = useAuth();

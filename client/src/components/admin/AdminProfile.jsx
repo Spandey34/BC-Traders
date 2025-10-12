@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useUser, useClerk } from "@clerk/clerk-react";
 import toast from 'react-hot-toast';
-import { useAuth } from '../../context/AuthProvider';
 import axios from 'axios';
 import { api } from '../../api/api';
+import { useAuth } from '../../redux/ReduxProvider';
 
 const AdminProfile = () => {
     const { user } = useUser();

@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { useProducts } from './ProductsProvider';
+import { useProducts } from '../redux/ReduxProvider';
 
 export const CartContext = createContext();
 

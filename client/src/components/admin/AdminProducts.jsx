@@ -2,8 +2,8 @@ import React, { useState, useMemo, useEffect } from 'react';
 import axios from 'axios';
 import { api } from '../../api/api';
 import toast from 'react-hot-toast';
-import { useProducts } from '../../context/ProductsProvider';
 import Cookies from "js-cookie";
+import { useProducts } from '../../redux/ReduxProvider';
 
 // --- REUSABLE COMPONENTS ---
 
