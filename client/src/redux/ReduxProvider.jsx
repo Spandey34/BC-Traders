@@ -29,11 +29,12 @@ export const AppProvider = ({ children }) => {
 
         const fetchAllDataForUser = async () => {
             try {
+                // FIX: Ensure phoneNumber is always defined, even if it's null.
                 const authPayload = {
                     name: user.fullName,
                     email: user.primaryEmailAddress.emailAddress,
                     clerkId: user.id,
-                    phoneNumber: user.unsafeMetadata.phoneNumber
+                    phoneNumber: user?.unsafeMetadata?.phoneNumber ?? null
                 };
                 const authRes = await axios.post(`${api}/user/userDetails`, authPayload, { withCredentials: true });
                 const fetchedUser = authRes.data.user;
