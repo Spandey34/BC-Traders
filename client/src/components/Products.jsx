@@ -89,7 +89,7 @@ const Products = () => {
             <>
               {filteredProducts.map((product, id) => (
                 <div
-                  key={product.id}
+                  key={product._id}
                   // ADDED: Conditional classes for disabled state
                   className={`group bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700 transition-all duration-300 ${
                     product.inStockCount!==0
@@ -123,14 +123,14 @@ const Products = () => {
                       <div className="flex flex-col">
                         <div className="flex items-center gap-2">
                           <p className="text-xl font-bold text-emerald-600 dark:text-emerald-400">
-                            ₹{product.price}
+                            ₹{product.sellingPrice}
                           </p>
                           <p className="text-sm text-gray-400 line-through">
                             ₹{product.mrp}
                           </p>
                         </div>
                         <div className="text-xs text-emerald-600 dark:text-emerald-400 font-medium mt-1">
-                          Save ₹{(product.mrp - product.price)}
+                          Save ₹{(product.mrp - product.sellingPrice)}
                         </div>
                         <div className={``} >Available: {product.inStockCount}</div>
                       </div>
