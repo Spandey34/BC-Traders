@@ -8,7 +8,7 @@ const generateToken = (res, userId, role) => {
 
     res.cookie('jwt', token, {
         httpOnly: true,
-        sameSite: 'strict',
+        sameSite: 'none',
         secure: true,
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     });
@@ -41,7 +41,7 @@ const userDetails = async (req, res) => {
             return res.status(401).json({ message: "Unauthorized: Not LoggedIn!" });
         }
 
-        let user = await User.findOne({ email: email });
+        let user = await User.findOne({ clerkId });
 
         if (!user) {
             const newUser = await User.create({
