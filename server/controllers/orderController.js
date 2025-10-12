@@ -6,12 +6,15 @@ import jwt from 'jsonwebtoken';
 export const getOrders = async (req, res) => {
     try {
         const token = req.cookies.jwt;
+        const {name,email,clerkId,phoneNumber, role} = req.body;
 
-        if (!token) {
+        if (!token && !clerkId) {
             return res.status(401).json({ message: "Not authorized, no token provided." });
         }
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        if(token)
+        {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
         
 
         const user = await User.findById(decoded.userId);
@@ -29,6 +32,25 @@ export const getOrders = async (req, res) => {
 
 
         return res.status(200).json({ orders });
+        }
+        else
+        {
+        
+        const user = await User.findOne({clerkId});
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+
+        let orders;
+        if (user.role === 'admin') {
+            orders = await Order.find({}).sort({ createdAt: -1 });
+        } else {
+            orders = await Order.find({ 'user.clerkId': user.clerkId }).sort({ createdAt: -1 });
+        }
+
+
+        return res.status(200).json({ orders });
+        }   
 
     } catch (error) {
         console.error("Error fetching orders:", error);

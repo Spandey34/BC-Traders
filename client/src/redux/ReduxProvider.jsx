@@ -34,11 +34,21 @@ export const AppProvider = ({ children }) => {
                     name: user.fullName,
                     email: user.primaryEmailAddress.emailAddress,
                     clerkId: user.id,
-                    phoneNumber: user?.unsafeMetadata?.phoneNumber ?? null
+                    phoneNumber: user?.unsafeMetadata?.phoneNumber ?? null,
+                    role: user?.unsafeMetadata?.role ?? "user"
                 };
                 const authRes = await axios.post(`${api}/user/userDetails`, authPayload, { withCredentials: true });
                 const fetchedUser = authRes.data.user;
                 setAuthUser(fetchedUser);
+
+                try {
+                    const ordersRes = await axios.post(`${api}/order`, {authPayload}, { withCredentials: true });
+                    setOrders(ordersRes.data.orders || []);
+                } catch (orderError) {
+                    console.error("Failed to fetch orders:", orderError);
+                    toast.error("Could not load orders.");
+                    setOrders([]);
+                }
 
                 // Now that user is authenticated and cookie is set, fetch products and orders
                 try {
@@ -50,14 +60,6 @@ export const AppProvider = ({ children }) => {
                     setProducts([]);
                 }
 
-                try {
-                    const ordersRes = await axios.post(`${api}/order`, {}, { withCredentials: true });
-                    setOrders(ordersRes.data.orders || []);
-                } catch (orderError) {
-                    console.error("Failed to fetch orders:", orderError);
-                    toast.error("Could not load orders.");
-                    setOrders([]);
-                }
 
             } catch (authError) {
                 console.error("Authentication failed:", authError);
