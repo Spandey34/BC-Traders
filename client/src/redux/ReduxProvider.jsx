@@ -85,7 +85,7 @@ export const AppProvider = ({ children }) => {
             setOrders([]); // Set to empty array to stop loading skeletons
         }
 
-    }, [user,activeTab]);
+    }, [user]);
 
     return (
         <AuthContext.Provider value={[authUser, setAuthUser]}>
