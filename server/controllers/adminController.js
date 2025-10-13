@@ -1,7 +1,7 @@
 import User from '../models/UserModel.js';
 import Order from '../models/orderModel.js';
 import { v2 as cloudinary } from 'cloudinary';
-import { userSocketMap } from '../socket/socketIo.js';
+import { io, userSocketMap } from '../socket/socketIo.js';
 
 const updateLogo = async (req, res) => {
     try {
