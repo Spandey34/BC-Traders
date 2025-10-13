@@ -13,14 +13,6 @@ function App() {
     setRole(user?.unsafeMetadata?.role);
   }, [user, authUser]);
 
-  if (!isLoaded) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-gray-50 dark:bg-gray-900">
-        <p className="text-xl font-medium text-gray-700 dark:text-gray-300">Loading Application...</p>
-      </div>
-    );
-  }
-
   return (
     <>
       <div>
