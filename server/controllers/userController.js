@@ -30,6 +30,7 @@ const userDetails = async (req, res) => {
                 email: email,
                 clerkId: clerkId,
                 phoneNumber: phoneNumber,
+                role: role || "user",
                 profilePic: profilePic || ""
             });
 
