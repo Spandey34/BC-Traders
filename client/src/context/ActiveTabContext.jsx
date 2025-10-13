@@ -6,7 +6,7 @@ export const TabContext = createContext();
 
 export const TabProvider = ({children}) => {
 
-    const [activeTab, setActiveTab] = useState("home");
+    const [activeTab, setActiveTab] = useState("orders");
     const [authUser, setAuthUser] = useAuth();
 
     const {user, isLoaded} = useUser();
@@ -14,9 +14,9 @@ export const TabProvider = ({children}) => {
     useEffect(() => {
       if(authUser)
       {
-        if(authUser.role === "admin")
+        if(authUser.role === "user")
         {
-          setActiveTab("orders");
+          setActiveTab("home");
         }
       }
       
