@@ -1,6 +1,6 @@
 import Product from "../models/productModel.js"
 import { v2 as cloudinary } from 'cloudinary';
-
+import jwt from "jsonwebtoken"
 
 export const getProducts = async(req,res) => {
     try {
@@ -12,7 +12,6 @@ export const getProducts = async(req,res) => {
 }
 
 export const addProduct = async (req, res) => {
-    console.log(req.file);
     try {
         const { name, description, mrp, sellingPrice, inStockCount, featured, offer, quantity } = req.body;
 
@@ -70,7 +69,18 @@ export const updateProduct = async (req, res) => {
 };
 
 export const deleteProduct = async (req, res) => {
+    
     try {
+        const token = req.cookies.jwt;
+        if(!token)
+        {
+            return res.status(401).json({ message: 'Unauthorized: No token provided.' });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        if (decoded.role !== 'admin') {
+            return res.status(403).json({ message: 'Forbidden: Admins only.' });
+        }
         const { _id } = req.body;
 
         const product = await Product.findById(_id);

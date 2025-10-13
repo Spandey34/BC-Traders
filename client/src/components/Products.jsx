@@ -47,7 +47,7 @@ const FeaturedProductsCarousel = ({ products, addToCart }) => {
                         <p className="text-md md:text-lg text-gray-300 line-through drop-shadow-lg">₹{currentProduct.mrp}</p>
                     </div>
                     {currentProduct.inStockCount > 0 ? (
-                        <button onClick={() => { addToCart(currentProduct); toast.success(`${currentProduct.name} added!`); }} className="flex items-center gap-2 px-5 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
+                        <button onClick={() => { addToCart(currentProduct);}} className="flex items-center gap-2 px-5 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
                             <ShoppingCartIcon className="w-5 h-5" /> Add to Cart
                         </button>
                     ) : (

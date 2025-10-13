@@ -6,37 +6,17 @@ import jwt from 'jsonwebtoken';
 export const getOrders = async (req, res) => {
     try {
         const token = req.cookies.jwt;
-        const {name,email,clerkId,phoneNumber, role} = req.body;
 
-        if (!token && !clerkId) {
+        if (!token) {
             return res.status(401).json({ message: "Not authorized, no token provided." });
         }
 
-        if(token)
-        {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        if(!decoded || !decoded.userId) {
+            return res.status(401).json({ message: "Not authorized, token invalid." });
+        }   
 
         const user = await User.findById(decoded.userId);
-
-        if (!user) {
-            return res.status(404).json({ message: "User not found." });
-        }
-
-        let orders;
-        if (user.role === 'admin') {
-            orders = await Order.find({}).sort({ createdAt: -1 });
-        } else {
-            orders = await Order.find({ 'user.clerkId': user.clerkId }).sort({ createdAt: -1 });
-        }
-
-
-        return res.status(200).json({ orders });
-        }
-        else
-        {
-        
-        const user = await User.findOne({clerkId});
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
@@ -52,7 +32,7 @@ export const getOrders = async (req, res) => {
         return res.status(200).json({ orders });
         }   
 
-    } catch (error) {
+     catch (error) {
         console.error("Error fetching orders:", error);
         res.status(401).json({ message: "Not authorized, token failed." });
     }
@@ -82,6 +62,12 @@ export const updateOrder = async (req, res) => {
 
 export const placeOrder = async (req, res) => {
     try {
+        const token = req.cookies.jwt;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.userId);
+        if(user.clerkId !== req.body.clerkId) {
+            return res.status(403).json({ message: "Clerk ID mismatch." });
+        }
         const { clerkId, name, email, phoneNumber, cartItems, paymentMethod } = req.body;
 
         if (!clerkId || !cartItems || cartItems.length === 0) {
@@ -128,13 +114,8 @@ export const placeOrder = async (req, res) => {
         await newOrder.save();
         
         // Find the user and push the new order's ID into their orders array
-        const user = await User.findOne({ clerkId: clerkId });
-        if (user) {
-            user.orders.push(newOrder._id);
-            await user.save();
-        } else {
-            console.warn(`User with clerkId ${clerkId} not found when trying to update their orders array.`);
-        }
+        user.orders.push(newOrder._id);
+        await user.save();
 
         return res.status(201).json({ message: 'Order placed successfully', order: newOrder });
 

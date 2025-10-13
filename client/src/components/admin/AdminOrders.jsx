@@ -342,7 +342,7 @@ const AdminOrders = () => {
         </button>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-4 mb-20">
         {filteredOrders.length > 0 ? (
           filteredOrders.map((order) => (
             <div
