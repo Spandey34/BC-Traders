@@ -5,6 +5,7 @@ import { useTab } from "../context/ActiveTabContext";
 import toast from "react-hot-toast";
 import { api } from "../api/api";
 import axios from "axios";
+import { useAuth } from "../redux/ReduxProvider";
 
 // --- Icon Components ---
 const ShoppingCartIcon = ({ className = "w-6 h-6" }) => (
@@ -65,6 +66,7 @@ const Cart = () => {
     const { isSignedIn, user } = useUser();
     const { cartItems, updateQuantity, clearCart } = useCart();
     const [, setActiveTab] = useTab();
+    const [authUser, setAuthUser] = useAuth();
     
     const [isPaymentDialogOpen, setPaymentDialogOpen] = useState(false);
 
@@ -79,6 +81,10 @@ const Cart = () => {
         if (!user?.unsafeMetadata?.phoneNumber) {
             toast.error("Please add a phone number in your profile to place an order.");
             setActiveTab("profile");
+            return;
+        }
+        if (!authUser.isVerified) {
+            toast.error("Your account is not verified.");
             return;
         }
         setPaymentDialogOpen(true);

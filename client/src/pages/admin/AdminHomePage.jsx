@@ -3,12 +3,14 @@ import { SignedIn, UserButton } from "@clerk/clerk-react";
 import { useTheme } from '../../context/ThemeProvider';
 import { GoPackage, GoPerson, GoTag } from "react-icons/go";
 import { LuMoon, LuSun } from "react-icons/lu";
+import { FaUsersLine } from "react-icons/fa6";
 
 // Import Admin Page Components
 import AdminOrders from '../../components/admin/AdminOrders';
 import AdminProducts from '../../components/admin/AdminProducts';
 import AdminProfile from '../../components/admin/AdminProfile';
 import { useTab } from '../../context/ActiveTabContext';
+import AdminUsers from '../../components/AdminUsers';
 
 
 const AdminHomePage = () => {
@@ -19,6 +21,7 @@ const AdminHomePage = () => {
         switch (activeTab) {
             case 'orders': return <AdminOrders />;
             case 'products': return <AdminProducts />;
+            case 'users': return <AdminUsers />;
             case 'profile': return <AdminProfile />;
             default: return <AdminOrders />; // Default to orders view for admin
         }
@@ -27,7 +30,8 @@ const AdminHomePage = () => {
     const navItems = [
         { id: 'orders', label: 'Orders', icon: <GoPackage /> },
         { id: 'products', label: 'Products', icon: <GoTag /> },
-        { id: 'profile', label: 'Profile', icon: <GoPerson /> },
+        { id: 'users', label: 'Users', icon: <FaUsersLine /> },
+        { id: 'profile', label: 'Profile', icon: <GoPerson /> }
     ];
 
     return (
