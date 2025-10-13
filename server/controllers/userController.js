@@ -16,7 +16,7 @@ const generateToken = (res, userId, role) => {
 
 const userDetails = async (req, res) => {
     try {
-        const { name, email, clerkId, phoneNumber } = req.body;
+        const { name, email, clerkId, phoneNumber, role, profilePic } = req.body;
 
         if (!clerkId) {
             return res.status(401).json({ message: "Unauthorized: Not LoggedIn!" });
@@ -29,7 +29,8 @@ const userDetails = async (req, res) => {
                 name: name,
                 email: email,
                 clerkId: clerkId,
-                phoneNumber: phoneNumber
+                phoneNumber: phoneNumber,
+                profilePic: profilePic || ""
             });
 
             // Generate JWT and set it as a cookie for the new user

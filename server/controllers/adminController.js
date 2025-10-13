@@ -1,6 +1,7 @@
 import User from '../models/UserModel.js';
 import Order from '../models/orderModel.js';
 import { v2 as cloudinary } from 'cloudinary';
+import { userSocketMap } from '../socket/socketIo.js';
 
 const updateLogo = async (req, res) => {
     try {
@@ -40,10 +41,9 @@ const updateLogo = async (req, res) => {
 const getAllUsers = async (req, res) => {
     try {
         const usersWithOrderData = await User.aggregate([
-            // Stage 1: Join each user with all of their corresponding orders
             {
                 $lookup: {
-                    from: "orders", // The actual name of the collection in MongoDB
+                    from: "orders", 
                     localField: "clerkId",
                     foreignField: "user.clerkId",
                     as: "orders"
@@ -108,7 +108,8 @@ const getAllUsers = async (req, res) => {
                     totalPaidAmount: 1,
                     unpaidAmount: 1,
                     lastOrderDate: 1,
-                    lastOrderAmount: { $ifNull: ["$lastOrder.totalAmount", 0] }
+                    lastOrderAmount: { $ifNull: ["$lastOrder.totalAmount", 0] },
+                    profilePic: 1
                 }
             }
         ]);
@@ -136,6 +137,8 @@ const verifyUser = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
+
+        io.to(userSocketMap[userId]).emit('verified', { message: "Your account has been verified." });
 
         res.status(200).json({ message: `User ${user.name} has been verified.` });
     } catch (error) {

@@ -2,6 +2,7 @@ import Order from '../models/orderModel.js';
 import Product from '../models/productModel.js';
 import User from '../models/UserModel.js';
 import jwt from 'jsonwebtoken';
+import { io, userSocketMap } from '../socket/socketIo.js';
 
 export const getOrders = async (req, res) => {
     try {
@@ -25,9 +26,8 @@ export const getOrders = async (req, res) => {
         if (user.role === 'admin') {
             orders = await Order.find({}).sort({ createdAt: -1 });
         } else {
-            orders = await Order.find({ 'user.clerkId': user.clerkId }).sort({ createdAt: -1 });
+            orders = await Order.find({ 'user.userId': user._id }).sort({ createdAt: -1 });
         }
-
 
         return res.status(200).json({ orders });
         }   
@@ -52,6 +52,8 @@ export const updateOrder = async (req, res) => {
       return res.status(404).json({ message: 'Order not found.' });
     }
 
+    io.to(userSocketMap[updatedOrder.user.userId]).emit('orderUpdated', updatedOrder);
+
     return res.status(200).json({ updatedOrder: updatedOrder });
 
   } catch (error){
@@ -65,12 +67,9 @@ export const placeOrder = async (req, res) => {
         const token = req.cookies.jwt;
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const user = await User.findById(decoded.userId);
-        if(user.clerkId !== req.body.clerkId) {
-            return res.status(403).json({ message: "Clerk ID mismatch." });
-        }
-        const { clerkId, name, email, phoneNumber, cartItems, paymentMethod } = req.body;
+        const {name, email, phoneNumber, cartItems, paymentMethod } = req.body;
 
-        if (!clerkId || !cartItems || cartItems.length === 0) {
+        if (!cartItems || cartItems.length === 0) {
             return res.status(400).json({ message: 'Missing required order information.' });
         }
 
@@ -101,7 +100,7 @@ export const placeOrder = async (req, res) => {
 
         const newOrder = new Order({
             user: {
-                clerkId,
+                userId: user._id,
                 name,
                 email,
                 phoneNumber,
@@ -110,8 +109,16 @@ export const placeOrder = async (req, res) => {
             totalAmount: totalAmount,
             paymentMethod: paymentMethod,
         });
-
+        ///68ec2861f9396536fa663578
         await newOrder.save();
+        io.to(userSocketMap[user._id].socketId).emit('orderPlaced', newOrder);
+        io.emit('orderPlaced', newOrder);
+        const productIds = newOrder.items.map(item => item.productId);
+        const updatedProducts = await Product.find({ '_id': { $in: productIds } });
+        if (updatedProducts.length > 0) {
+            io.emit('productsUpdated', updatedProducts);
+        }
+        io.emit('newOrder', newOrder);
         
         // Find the user and push the new order's ID into their orders array
         user.orders.push(newOrder._id);
@@ -128,6 +135,7 @@ export const placeOrder = async (req, res) => {
 export const deleteOrder = async (req, res) => {
     try {
         const { orderId } = req.body;
+        const {userId} = req.body.userId
 
         if (!orderId) {
             return res.status(400).json({ message: 'Order ID is required.' });
@@ -148,12 +156,14 @@ export const deleteOrder = async (req, res) => {
 
         // Remove the order reference from the user's order list
         await User.findOneAndUpdate(
-            { 'clerkId': order.user.clerkId },
+            { 'clerkId': order.user.userId },
             { $pull: { orders: order._id } }
         );
 
         // Delete the order itself
         await Order.findByIdAndDelete(orderId);
+
+        io.to(userSocketMap[userId]).emit('orderDeleted', orderId);
 
         res.status(200).json({ message: 'Order deleted successfully.' });
 

@@ -10,12 +10,15 @@ import AdminOrders from '../../components/admin/AdminOrders';
 import AdminProducts from '../../components/admin/AdminProducts';
 import AdminProfile from '../../components/admin/AdminProfile';
 import { useTab } from '../../context/ActiveTabContext';
-import AdminUsers from '../../components/AdminUsers';
+import AdminUsers from '../../components/admin/AdminUsers';
+import { useSocket } from '../../socket/SocketProvider';
+import { useEffect } from 'react';
 
 
 const AdminHomePage = () => {
     const [activeTab, setActiveTab] = useTab();
     const [theme,setTheme , toggleTheme] = useTheme();
+    const [socket,onlineUsers,newOrders,setNewOrders] = useSocket();
 
     const renderContent = () => {
         switch (activeTab) {
@@ -26,9 +29,17 @@ const AdminHomePage = () => {
             default: return <AdminOrders />; // Default to orders view for admin
         }
     };
+
     
     const navItems = [
-        { id: 'orders', label: 'Orders', icon: <GoPackage /> },
+        { id: 'orders', label: 'Orders', icon: <div className='relative' >
+            <GoPackage />
+            {newOrders > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center font-bold shadow-sm">
+                        {newOrders}
+                    </span>
+                )}
+            </div> },
         { id: 'products', label: 'Products', icon: <GoTag /> },
         { id: 'users', label: 'Users', icon: <FaUsersLine /> },
         { id: 'profile', label: 'Profile', icon: <GoPerson /> }

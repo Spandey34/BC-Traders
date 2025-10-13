@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useCart } from "../context/CartContext";
 import { useProducts } from "../redux/ReduxProvider";
 import toast from "react-hot-toast";
@@ -77,10 +77,12 @@ const FeaturedProductsCarousel = ({ products, addToCart }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const nextSlide = useCallback(() => {
-    const isLastSlide = currentIndex === products.length - 1;
-    const newIndex = isLastSlide ? 0 : currentIndex + 1;
-    setCurrentIndex(newIndex);
-  }, [currentIndex, products.length]);
+    if (products && products.length > 0) {
+      const isLastSlide = currentIndex === products.length - 1;
+      const newIndex = isLastSlide ? 0 : currentIndex + 1;
+      setCurrentIndex(newIndex);
+    }
+  }, [currentIndex, products]);
 
   const prevSlide = () => {
     const isFirstSlide = currentIndex === 0;
@@ -89,13 +91,22 @@ const FeaturedProductsCarousel = ({ products, addToCart }) => {
   };
 
   useEffect(() => {
-    if (products && products.length > 0) {
+    if (products && products.length > 1) {
       const slideInterval = setInterval(nextSlide, 5000);
       return () => clearInterval(slideInterval);
     }
   }, [nextSlide, products]);
+  
+  // --- FIX START: Display a message if there are no featured products ---
+  if (!products || products.length === 0) {
+    return (
+        <div className="h-[50vh] md:h-[60vh] w-full m-auto mb-8 relative group flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-2xl">
+            <p className="text-xl text-gray-500">No featured products yet.</p>
+        </div>
+    );
+  }
+  // --- FIX END ---
 
-  if (!products || products.length === 0) return null;
   const currentProduct = products[currentIndex];
 
   return (
@@ -171,6 +182,15 @@ const Products = () => {
   const { addToCart } = useCart();
   const [searchQuery, setSearchQuery] = useState("");
 
+  // --- FIX START: Changed logic to return an array directly, not an object ---
+  const featuredProducts = useMemo(() => {
+    if (!Array.isArray(products)) {
+        return [];
+    }
+    return products.filter(p => p.featured);
+  }, [products]);
+  // --- FIX END ---
+  
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -218,7 +238,7 @@ const Products = () => {
   return (
     <div className="max-w-7xl mx-auto">
       <div className="p-4 md:p-6 pb-24 lg:pb-6">
-        <FeaturedProductsCarousel products={products} addToCart={addToCart} />
+        <FeaturedProductsCarousel products={featuredProducts} addToCart={addToCart} />
 
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">

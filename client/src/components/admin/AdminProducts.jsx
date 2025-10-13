@@ -149,10 +149,10 @@ const AdminFeaturedCarousel = ({ products, setEditingProduct, handleToggleFeatur
 
     return (
         <div className='h-[40vh] w-full m-auto mb-8 relative group'>
-            <div style={{ backgroundImage: `url(${currentProduct.imageUrl})` }} className='w-full h-full rounded-2xl bg-center bg-cover duration-500 ease-in-out'>
+            <div style={{ backgroundImage: `url(${currentProduct?.imageUrl?? ""})` }} className='w-full h-full rounded-2xl bg-center bg-cover duration-500 ease-in-out'>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent rounded-2xl"></div>
                 <div className="absolute bottom-0 left-0 p-6 md:p-10 text-white">
-                    <h2 className="text-2xl md:text-4xl font-bold mb-2 drop-shadow-lg">{currentProduct.name}</h2>
+                    <h2 className="text-2xl md:text-4xl font-bold mb-2 drop-shadow-lg">{currentProduct?.name?? ""}</h2>
                     <div className="flex items-center gap-4 mb-4">
                         <p className="text-xl md:text-2xl font-bold text-emerald-400 drop-shadow-lg">₹{currentProduct.sellingPrice}</p>
                         <p className="text-md md:text-lg text-gray-300 line-through drop-shadow-lg">₹{currentProduct.mrp}</p>

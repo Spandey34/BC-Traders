@@ -217,7 +217,7 @@ const AdminOrders = () => {
       setOrderToDelete(null); // Close the dialog immediately
 
       try {
-          await axios.post(`${api}/order/delete`, { orderId: orderIdToDelete }, {
+          await axios.post(`${api}/order/delete`, { orderId: orderIdToDelete ,userId: orderToDelete.user.userId}, {
               withCredentials: true,
           });
           toast.success("Order deleted successfully!");

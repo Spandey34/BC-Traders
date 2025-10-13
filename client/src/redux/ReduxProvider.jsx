@@ -35,12 +35,14 @@ export const AppProvider = ({ children }) => {
 
     const fetchAllDataForUser = async () => {
       try {
+        console.log(user.imageUrl);
         const authPayload = {
           name: user.fullName,
           email: user.primaryEmailAddress.emailAddress,
           clerkId: user.id,
           phoneNumber: user.publicMetadata?.phoneNumber ?? null,
           role: user.publicMetadata?.role ?? "user",
+          profilePic: user.imageUrl,
         };
         const authRes = await axios.post(
           `${api}/user/userDetails`,
@@ -97,13 +99,12 @@ export const AppProvider = ({ children }) => {
     if (user) {
       fetchAllDataForUser();
     } else {
-      // User is not logged in
-      fetchProductsOnly(); // 4. CLEAR ALL USER-SPECIFIC DATA ON LOGOUT
+      fetchProductsOnly(); 
       setAuthUser(null);
       setOrders([]);
       setUsers([]);
     }
-  }, [user]); // Removed useTab from dependency array to prevent unnecessary re-fetches
+  }, [user]); 
 
   return (
     <AuthContext.Provider value={[authUser, setAuthUser]}>

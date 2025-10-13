@@ -1,6 +1,7 @@
 import Product from "../models/productModel.js"
 import { v2 as cloudinary } from 'cloudinary';
 import jwt from "jsonwebtoken"
+import { io } from "../socket/socketIo.js";
 
 export const getProducts = async(req,res) => {
     try {
@@ -32,7 +33,7 @@ export const addProduct = async (req, res) => {
         });
 
         await newProduct.save();
-
+        io.emit('newProduct', newProduct);
         return res.status(201).json({ product: newProduct });
 
     } catch (error) {
@@ -59,6 +60,8 @@ export const updateProduct = async (req, res) => {
         if (!updatedProduct) {
             return res.status(404).json({ message: 'Product not found.' });
         }
+
+        io.emit('productsUpdated', updatedProduct);
 
         return res.status(200).json({ product: updatedProduct });
 
@@ -92,6 +95,8 @@ export const deleteProduct = async (req, res) => {
         await cloudinary.uploader.destroy(`bc-traders-products/${publicId}`);
         
         await Product.findByIdAndDelete(_id);
+
+        io.emit('productDeleted', _id);
 
         return res.status(200).json({ message: 'Product deleted successfully.' });
 

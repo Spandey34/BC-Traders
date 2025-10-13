@@ -98,7 +98,6 @@ const Cart = () => {
             const payload = {
                 name: user.fullName,
                 email: user.primaryEmailAddress.emailAddress,
-                clerkId: user.id,
                 phoneNumber: user.unsafeMetadata.phoneNumber,
                 cartItems: cartItems,
                 paymentMethod: paymentMethod,
