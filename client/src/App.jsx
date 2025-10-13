@@ -7,12 +7,6 @@ import { useUser } from "@clerk/clerk-react";
 
 function App() {
   const [authUser, setAuthUser] = useAuth();
-  const { user, isLoaded } = useUser();
-  const[role,setRole] = useState("user");
-  useEffect(() => {
-    setRole(user?.unsafeMetadata?.role);
-  }, [user, authUser]);
-
   return (
     <>
       <div>
@@ -40,9 +34,8 @@ function App() {
             },
           }}
         />
-        {/* This logic now runs AFTER isLoaded is true using the direct user data */}
         
-        {role=="admin" ? <AdminHomePage /> : <UserHomePage />}
+        {authUser?.role=="admin" ? <AdminHomePage /> : <UserHomePage />}
       </div>
     </>
   );
