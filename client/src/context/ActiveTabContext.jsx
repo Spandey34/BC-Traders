@@ -1,20 +1,22 @@
 import { useUser } from '@clerk/clerk-react';
 import React, { createContext, useState, useContext, useEffect, act } from 'react'
+import {useAuth} from "../redux/ReduxProvider"
 
 export const TabContext = createContext();
 
 export const TabProvider = ({children}) => {
 
     const [activeTab, setActiveTab] = useState("home");
+    const [authUser, setAuthUser] = useAuth();
 
     const {user, isLoaded} = useUser();
 
     useEffect(() => {
-      if(isLoaded&&user)
+      if(authUser)
       {
-        if(user?.unsafeMetadata?.role==="admin")
+        if(authUser.role === "admin")
         {
-            setActiveTab("orders");
+          setActiveTab("orders");
         }
       }
       
