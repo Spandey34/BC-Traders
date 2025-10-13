@@ -1,8 +1,9 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, act } from 'react';
 import axios from 'axios';
 import { api } from '../api/api';
 import { useUser } from '@clerk/clerk-react';
 import toast from 'react-hot-toast';
+import { useTab } from '../context/ActiveTabContext';
 
 export const AuthContext = createContext();
 export const ProductsContext = createContext();
@@ -12,6 +13,7 @@ export const AppProvider = ({ children }) => {
     const [authUser, setAuthUser] = useState(null);
     const [products, setProducts] = useState([]);
     const [orders, setOrders] = useState(undefined);
+    const[activeTab,setActiveTab] = useTab();
     
     const { user } = useUser();
 
@@ -83,7 +85,7 @@ export const AppProvider = ({ children }) => {
             setOrders([]); // Set to empty array to stop loading skeletons
         }
 
-    }, [user,authUser]);
+    }, [user,activeTab]);
 
     return (
         <AuthContext.Provider value={[authUser, setAuthUser]}>

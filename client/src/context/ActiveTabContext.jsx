@@ -1,15 +1,24 @@
-import React, { createContext, useState, useContext } from 'react'
-import Cookies from 'js-cookie'
-import { useEffect } from 'react';
-import axios from 'axios';
-import { api } from '../api/api';
 import { useUser } from '@clerk/clerk-react';
+import React, { createContext, useState, useContext, useEffect, act } from 'react'
 
 export const TabContext = createContext();
 
 export const TabProvider = ({children}) => {
 
     const [activeTab, setActiveTab] = useState("home");
+
+    const {user, isLoaded} = useUser();
+
+    useEffect(() => {
+      if(isLoaded&&user)
+      {
+        if(user?.unsafeMetadata?.role==="admin")
+        {
+            setActiveTab("orders");
+        }
+      }
+      
+    },[ user])
   return (
     <TabContext.Provider value={[activeTab, setActiveTab]} >
         {children}

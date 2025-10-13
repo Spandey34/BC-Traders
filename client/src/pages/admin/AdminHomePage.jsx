@@ -8,10 +8,11 @@ import { LuMoon, LuSun } from "react-icons/lu";
 import AdminOrders from '../../components/admin/AdminOrders';
 import AdminProducts from '../../components/admin/AdminProducts';
 import AdminProfile from '../../components/admin/AdminProfile';
+import { useTab } from '../../context/ActiveTabContext';
 
 
 const AdminHomePage = () => {
-    const [activeTab, setActiveTab] = useState("orders");
+    const [activeTab, setActiveTab] = useTab();
     const [theme,setTheme , toggleTheme] = useTheme();
 
     const renderContent = () => {
