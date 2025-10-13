@@ -17,25 +17,6 @@ const generateToken = (res, userId, role) => {
 const userDetails = async (req, res) => {
     try {
         const { name, email, clerkId, phoneNumber } = req.body;
-        const token = req.cookies.jwt;
-
-        if (token && clerkId) {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            let user = await User.findById(decoded.userId).select("-password");
-            if (!user) {
-                return res.status(401).json({ message: "Unauthorized: User not found" });
-            }
-            if (phoneNumber && user.phoneNumber !== phoneNumber) {
-                user.phoneNumber = phoneNumber;
-                await user.save();
-            }
-
-            // Generate JWT and set it as a cookie for the existing user
-            generateToken(res, user._id, user.role);
-
-            return res.status(200).json({ user });
-        }
-
 
         if (!clerkId) {
             return res.status(401).json({ message: "Unauthorized: Not LoggedIn!" });
