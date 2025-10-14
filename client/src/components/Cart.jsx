@@ -80,6 +80,7 @@ const Cart = () => {
         }
         if ( !authUser.phoneNumber) {
             toast.error("Please Add Phone Number.");
+            setActiveTab("profile");
             return;
         }
     
