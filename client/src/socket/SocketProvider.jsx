@@ -50,16 +50,18 @@ export const SocketProvider = ({ children }) => {
       newSocket.on("newOrder", (order) => {
         if(authUser.role==="admin")
         {
-          console.log(activeTab);
             toast.success("New order received!");
             setNewOrders((newOrders) => newOrders + 1);
-            console.log(newOrders)
+            setOrders((prev) => [order, ...prev]);
         }
       });
 
-      newSocket.on("verified",() => {
-        toast.success("Your account has been verified!");
+      newSocket.on("verified",(data) => {
+        if(authUser._id==data.userId)
+        {
+          toast.success("Your account has been verified!");
         setAuthUser((prev) => ({ ...prev, isVerified: true }));
+        }
       });
 
       newSocket.on("productsUpdated", (updatedProduct) => {

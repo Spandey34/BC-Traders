@@ -35,7 +35,6 @@ export const AppProvider = ({ children }) => {
 
     const fetchAllDataForUser = async () => {
       try {
-        console.log(user.imageUrl);
         const authPayload = {
           name: user.fullName,
           email: user.primaryEmailAddress.emailAddress,
