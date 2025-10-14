@@ -40,7 +40,7 @@ export const AppProvider = ({ children }) => {
           name: user.fullName,
           email: user.primaryEmailAddress.emailAddress,
           clerkId: user.id,
-          phoneNumber: user.publicMetadata?.phoneNumber ?? null,
+          phoneNumber: user.unsafeMetadata?.phoneNumber ?? null,
           role: user.publicMetadata?.role ?? "user",
           profilePic: user.imageUrl,
         };

@@ -45,6 +45,8 @@ const userDetails = async (req, res) => {
             }
 
             // Generate JWT and set it as a cookie for the existing user
+           // console.log(user);
+           // console.log("Existing user logged in, generating token.");
             generateToken(res, user._id, user.role);
 
             return res.status(200).json({ user });

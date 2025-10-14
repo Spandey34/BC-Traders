@@ -78,13 +78,13 @@ const Cart = () => {
             setActiveTab("profile");
             return;
         }
-        if (!user?.unsafeMetadata?.phoneNumber) {
-            toast.error("Please add a phone number in your profile to place an order.");
-            setActiveTab("profile");
+    
+        if (!authUser.isVerified ) {
+            toast.error("Your account is not verified.");
             return;
         }
-        if (!authUser.isVerified) {
-            toast.error("Your account is not verified.");
+        if ( !authUser.phoneNumber) {
+            toast.error("Your account not have mobile number.");
             return;
         }
         setPaymentDialogOpen(true);

@@ -39,8 +39,8 @@ const FilterModal = ({
             <option value="unpaid">Unpaid</option>
           </select>
           <select
-            name="paymentMode"
-            value={filters.paymentMode}
+            name="paymentMethod"
+            value={filters.paymentMethod}
             onChange={onFilterChange}
             className="input-style"
           >
@@ -164,7 +164,7 @@ const OrderDetailsModal = ({ isOpen, onClose, order }) => {
 const initialFilterState = {
   search: "",
   paymentStatus: "all",
-  paymentMode: "all",
+  paymentMethod: "all",
   deliveryStatus: "all",
   startDate: "",
   endDate: "",
@@ -243,10 +243,10 @@ const AdminOrders = () => {
   const filteredOrders = useMemo(() => {
     if (!orders) return [];
     return orders.filter((order) => {
-      const { search, paymentStatus, paymentMode, deliveryStatus, startDate, endDate } = filters;
+      const { search, paymentStatus, paymentMethod, deliveryStatus, startDate, endDate } = filters;
 
       if (paymentStatus !== "all" && order.paymentStatus !== paymentStatus) return false;
-      if (paymentMode !== "all" && order.paymentMode !== paymentMode) return false;
+      if (paymentMethod !== "all" && order.paymentMethod !== paymentMethod) return false;
       if (deliveryStatus !== "all" && order.status !== deliveryStatus) return false;
       const searchMatch = search.toLowerCase();
       if (searchMatch && !(order.user.name.toLowerCase().includes(searchMatch) || order.user.phoneNumber?.includes(searchMatch))) {
