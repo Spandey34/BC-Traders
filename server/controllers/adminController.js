@@ -138,8 +138,6 @@ const verifyUser = async (req, res) => {
             return res.status(404).json({ message: "User not found." });
         }
 
-        console.log(userSocketMap[userId].socketId);
-
         io.emit('verified', { message: "Your account has been verified.", userId: userId });
 
         res.status(200).json({ message: `User ${user.name} has been verified.` });
