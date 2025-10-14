@@ -78,15 +78,16 @@ const Cart = () => {
             setActiveTab("profile");
             return;
         }
+        if ( !authUser.phoneNumber) {
+            toast.error("Please Add Phone Number.");
+            return;
+        }
     
         if (!authUser.isVerified ) {
             toast.error("Your account is not verified.");
             return;
         }
-        if ( !authUser.phoneNumber) {
-            toast.error("Your account not have mobile number.");
-            return;
-        }
+        
         setPaymentDialogOpen(true);
     };
 
