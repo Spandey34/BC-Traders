@@ -120,7 +120,7 @@ const AdminHomePage = () => {
                         <button 
                             key={item.id} 
                             onClick={() => setActiveTab(item.id)}
-                            className={`flex flex-col items-center gap-1 w-full py-2 rounded-xl transition-all duration-200 text-lg ${
+                            className={`flex flex-col items-center gap-1 w-full py-2 rounded-xl transition-all duration-200 text-xl ${
                                 activeTab === item.id 
                                     ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg' 
                                     : 'text-gray-600 dark:text-gray-400'

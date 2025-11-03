@@ -137,7 +137,7 @@ const UserHomePage = () => {
                                     : 'text-gray-600 dark:text-gray-400 hover:bg-white/50 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-gray-100'
                             }`}
                         >
-                            <div className="relative">{item.icon}</div>
+                            <div className="relative text-xl">{item.icon}</div>
                             <span className="text-xl font-medium">{item.label}</span>
                         </button>
                     ))}
