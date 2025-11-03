@@ -127,7 +127,7 @@ const AdminHomePage = () => {
                             }`}
                         >
                             {item.icon}
-                            <span className="text-xs font-medium">{item.label}</span>
+                            <span className="text-l font-medium">{item.label}</span>
                         </button>
                     ))}
                 </nav>

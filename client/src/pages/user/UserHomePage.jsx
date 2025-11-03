@@ -138,7 +138,7 @@ const UserHomePage = () => {
                             }`}
                         >
                             <div className="relative">{item.icon}</div>
-                            <span className="text-xs font-medium">{item.label}</span>
+                            <span className="text-l font-medium">{item.label}</span>
                         </button>
                     ))}
                 </nav>
