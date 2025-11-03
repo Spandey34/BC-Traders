@@ -295,7 +295,7 @@ const AdminOrders = () => {
         )}
       </div>
 
-      <div className="fixed bottom-16 lg:bottom-0 left-0 lg:left-80 right-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-t dark:border-gray-700 p-3 shadow-lg z-30">
+      <div className="fixed bottom-22 lg:bottom-0 left-0 lg:left-80 right-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-t dark:border-gray-700 p-3 shadow-lg z-30">
         <div className="flex justify-around text-center text-sm font-semibold">
           <div>
             <span className="block text-green-500">Paid Total</span>
