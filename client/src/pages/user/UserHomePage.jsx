@@ -7,10 +7,10 @@ import { GoPackage, GoPerson } from "react-icons/go"
 import { LuMoon, LuSun } from "react-icons/lu";
 
 // Import Page Components
-import Products from '../../components/Products';
-import Orders from '../../components/Orders';
-import Cart from '../../components/Cart';
-import Profile from '../../components/Profile';
+import Products from './Products';
+import Orders from './Orders';
+import Cart from './Cart';
+import Profile from './Profile';
 import { useTab } from '../../context/ActiveTabContext';
 
 

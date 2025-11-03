@@ -3,11 +3,11 @@ import axios from 'axios';
 import { api } from '../../api/api';
 import toast from 'react-hot-toast';
 import { useProducts } from '../../redux/ReduxProvider';
+import AdminFeaturedCarousel from '../../components/AdminFeaturedCarousel';
+import ProductFormModal from '../../components/ProductFormModel';
 
 // --- SVG Icon Components ---
 const SearchIcon = ({ className = "w-5 h-5" }) => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>);
-const ChevronLeftIcon = ({ className = "w-6 h-6" }) => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m15 18-6-6 6-6" /></svg>);
-const ChevronRightIcon = ({ className = "w-6 h-6" }) => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m9 18 6-6-6-6" /></svg>);
 
 
 // --- REUSABLE COMPONENTS (Unchanged) ---
@@ -29,150 +29,6 @@ const ConfirmationDialog = ({ isOpen, onClose, onConfirm, title, children, isLoa
     );
 };
 
-const ProductFormModal = ({ isOpen, onClose, onSubmit, product, title, isLoading }) => {
-    const [formData, setFormData] = useState({});
-    const [imagePreview, setImagePreview] = useState(null);
-
-    useEffect(() => {
-        const initialFormState = product || {
-            name: '', mrp: '', sellingPrice: '', quantity: '', inStockCount: '', featured: false, offer: '', description: '', image: null
-        };
-        setFormData(initialFormState);
-        setImagePreview(product?.imageUrl || null);
-    }, [product, isOpen]);
-
-    const handleChange = (e) => {
-        const { name, value, type, checked, files } = e.target;
-        if (type === 'file') {
-            const file = files[0];
-            setFormData(prev => ({ ...prev, image: file }));
-            if (file) {
-                setImagePreview(URL.createObjectURL(file));
-            }
-        } else {
-            setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
-        }
-    };
-    
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const data = new FormData();
-        for (const key in formData) {
-            if (key !== 'imageUrl') {
-                data.append(key, formData[key]);
-            }
-        }
-        onSubmit(data);
-    };
-
-    if (!isOpen) return null;
-    
-    const inputStyle = "w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500";
-
-    return (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-            <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg max-h-[90vh] overflow-y-auto">
-                <h2 className="text-xl font-bold mb-4">{title}</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input name="name" value={formData.name || ''} onChange={handleChange} placeholder="Product Name" className={inputStyle} required/>
-                    <input name="quantity" value={formData.quantity || ''} onChange={handleChange} placeholder="Quantity (e.g., 500g, 1L)" className={inputStyle} />
-                    <input name="mrp" value={formData.mrp || ''} onChange={handleChange} placeholder="MRP" type="number" step="0.01" className={inputStyle} required/>
-                    <input name="sellingPrice" value={formData.sellingPrice || ''} onChange={handleChange} placeholder="Selling Price" type="number" step="0.01" className={inputStyle} required/>
-                    <input name="inStockCount" value={formData.inStockCount || ''} onChange={handleChange} placeholder="Stock Count" type="number" className={inputStyle} required/>
-                    <input name="offer" value={formData.offer || ''} onChange={handleChange} placeholder="Offer (e.g., 10% off)" className={inputStyle} />
-                </div>
-                <textarea name="description" value={formData.description || ''} onChange={handleChange} placeholder="Product Description" rows="3" className={`${inputStyle} mt-4 w-full`}></textarea>
-                
-                <div className="mt-4 flex items-center justify-between">
-                    <label htmlFor="featured-toggle" className="flex items-center cursor-pointer">
-                        <div className="relative">
-                            <input type="checkbox" id="featured-toggle" name="featured" className="sr-only" checked={formData.featured || false} onChange={handleChange} />
-                            <div className={`block w-14 h-8 rounded-full transition ${formData.featured ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-600'}`}></div>
-                            <div className={`dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform ${formData.featured ? 'translate-x-full' : ''}`}></div>
-                        </div>
-                        <div className="ml-3 text-gray-700 dark:text-gray-300 font-medium">Featured</div>
-                    </label>
-
-                    <div className="text-center">
-                        <label className="block text-sm font-medium mb-1">Product Image</label>
-                        <input name="image" type="file" onChange={handleChange} className="text-sm" accept="image/*" required={!product} />
-                        {imagePreview && <img src={imagePreview} alt="Preview" className="mt-2 w-24 h-24 object-cover rounded-md mx-auto" />}
-                    </div>
-                </div>
-
-                <div className="flex justify-end gap-3 mt-6">
-                    <button type="button" onClick={onClose} className="px-4 py-2 rounded-md font-semibold bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition" disabled={isLoading}>Cancel</button>
-                    <button type="submit" className="px-4 py-2 rounded-md font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 transition" disabled={isLoading}>
-                        {isLoading ? 'Saving...' : 'Save Product'}
-                    </button>
-                </div>
-            </form>
-        </div>
-    );
-};
-
-// --- Admin-Specific Featured Carousel ---
-const AdminFeaturedCarousel = ({ products, setEditingProduct, handleToggleFeatured }) => {
-    const [currentIndex, setCurrentIndex] = useState(0);
-
-    const nextSlide = useCallback(() => {
-        if (products.length === 0) return;
-        const isLastSlide = currentIndex === products.length - 1;
-        const newIndex = isLastSlide ? 0 : currentIndex + 1;
-        setCurrentIndex(newIndex);
-    }, [currentIndex, products.length]);
-
-    const prevSlide = () => {
-        if (products.length === 0) return;
-        const isFirstSlide = currentIndex === 0;
-        const newIndex = isFirstSlide ? products.length - 1 : currentIndex - 1;
-        setCurrentIndex(newIndex);
-    };
-    
-    useEffect(() => {
-        if (products && products.length > 1) {
-            const slideInterval = setInterval(nextSlide, 5000);
-            return () => clearInterval(slideInterval);
-        }
-    }, [nextSlide, products]);
-
-    if (!products || products.length === 0) {
-        return (
-            <div className="h-[40vh] w-full m-auto mb-8 rounded-2xl bg-gray-100 dark:bg-gray-800 flex flex-col items-center justify-center text-center p-4">
-                <h2 className="text-2xl font-bold text-gray-700 dark:text-gray-200">No Featured Products</h2>
-                <p className="text-gray-500 dark:text-gray-400 mt-2">You can mark a product as "featured" from the list below to have it appear here.</p>
-            </div>
-        )
-    }
-
-    const currentProduct = products[currentIndex];
-
-    return (
-        <div className='h-[40vh] w-full m-auto mb-8 relative group'>
-            <div style={{ backgroundImage: `url(${currentProduct?.imageUrl?? ""})` }} className='w-full h-full rounded-2xl bg-center bg-cover duration-500 ease-in-out'>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent rounded-2xl"></div>
-                <div className="absolute bottom-0 left-0 p-6 md:p-10 text-white">
-                    <h2 className="text-2xl md:text-4xl font-bold mb-2 drop-shadow-lg">{currentProduct?.name?? ""}</h2>
-                    <div className="flex items-center gap-4 mb-4">
-                        <p className="text-xl md:text-2xl font-bold text-emerald-400 drop-shadow-lg">₹{currentProduct.sellingPrice}</p>
-                        <p className="text-md md:text-lg text-gray-300 line-through drop-shadow-lg">₹{currentProduct.mrp}</p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                         <button onClick={() => setEditingProduct(currentProduct)} className="px-4 py-2 rounded-md font-semibold text-white bg-blue-500 hover:bg-blue-600 transition-all duration-200 shadow-lg">Edit</button>
-                         <button onClick={() => handleToggleFeatured(currentProduct)} className="px-4 py-2 rounded-md font-semibold text-white bg-amber-500 hover:bg-amber-600 transition-all duration-200 shadow-lg">Remove from Featured</button>
-                    </div>
-                </div>
-            </div>
-            <div className='hidden group-hover:block absolute top-1/2 -translate-y-1/2 left-5 text-2xl rounded-full p-2 bg-black/20 text-white cursor-pointer' onClick={prevSlide}><ChevronLeftIcon className="w-8 h-8" /></div>
-            <div className='hidden group-hover:block absolute top-1/2 -translate-y-1/2 right-5 text-2xl rounded-full p-2 bg-black/20 text-white cursor-pointer' onClick={nextSlide}><ChevronRightIcon className="w-8 h-8" /></div>
-            <div className='flex justify-center py-2 absolute bottom-4 right-0 left-0'>
-                {products.map((_, i) => (<div key={i} onClick={() => setCurrentIndex(i)} className={`cursor-pointer transition-all mx-1 ${currentIndex === i ? 'p-1.5' : 'p-1 opacity-50'}`}><div className={`w-2 h-2 rounded-full ${currentIndex === i ? 'bg-white' : 'bg-gray-400'}`}></div></div>))}
-            </div>
-        </div>
-    );
-};
-
-// --- Main AdminProducts Component ---
 const AdminProducts = () => {
     const [products, setProducts] = useProducts();
     const [isLoading, setIsLoading] = useState(false);

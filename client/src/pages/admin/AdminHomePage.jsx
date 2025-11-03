@@ -6,11 +6,11 @@ import { LuMoon, LuSun } from "react-icons/lu";
 import { FaUsersLine } from "react-icons/fa6";
 
 // Import Admin Page Components
-import AdminOrders from '../../components/admin/AdminOrders';
-import AdminProducts from '../../components/admin/AdminProducts';
-import AdminProfile from '../../components/admin/AdminProfile';
+import AdminOrders from './AdminOrders';
+import AdminProducts from './AdminProducts';
+import AdminProfile from './AdminProfile';
 import { useTab } from '../../context/ActiveTabContext';
-import AdminUsers from '../../components/admin/AdminUsers';
+import AdminUsers from './AdminUsers';
 import { useSocket } from '../../socket/SocketProvider';
 import { useEffect } from 'react';
 
