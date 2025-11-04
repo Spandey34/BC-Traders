@@ -25,10 +25,7 @@ const ConfirmationDialog = ({
           <button onClick={onClose} className="btn-secondary">
             Cancel
           </button>
-          <button
-            onClick={onConfirm}
-            className={`btn-primary ${confirmColor}`}
-          >
+          <button onClick={onConfirm} className={`btn-primary ${confirmColor}`}>
             {confirmText}
           </button>
         </div>
@@ -51,7 +48,12 @@ const AdminOrders = () => {
   const [filters, setFilters] = useState(initialFilterState);
   const [isFilterModalOpen, setFilterModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const [confirmState, setConfirmState] = useState({ isOpen: false, orderId: null, action: null, updates: {} });
+  const [confirmState, setConfirmState] = useState({
+    isOpen: false,
+    orderId: null,
+    action: null,
+    updates: {},
+  });
   const [orderToDelete, setOrderToDelete] = useState(null);
 
   const handleFilterChange = (e) => {
@@ -84,24 +86,28 @@ const AdminOrders = () => {
   };
 
   const handleDeleteOrder = async () => {
-      if (!orderToDelete) return;
+    if (!orderToDelete) return;
 
-      const orderIdToDelete = orderToDelete._id;
-      const originalOrders = JSON.parse(JSON.stringify(orders));
+    const orderIdToDelete = orderToDelete._id;
+    const originalOrders = JSON.parse(JSON.stringify(orders));
 
-      setOrders(prev => prev.filter(order => order._id !== orderIdToDelete));
-      setOrderToDelete(null); // Close the dialog immediately
+    setOrders((prev) => prev.filter((order) => order._id !== orderIdToDelete));
+    setOrderToDelete(null); // Close the dialog immediately
 
-      try {
-          await axios.post(`${api}/order/delete`, { orderId: orderIdToDelete ,userId: orderToDelete.user.userId}, {
-              withCredentials: true,
-          });
-          toast.success("Order deleted successfully!");
-      } catch (error) {
-          toast.error("Deletion failed. Reverting changes.");
-          setOrders(originalOrders);
-          console.error("Failed to delete order:", error);
-      }
+    try {
+      await axios.post(
+        `${api}/order/delete`,
+        { orderId: orderIdToDelete, userId: orderToDelete.user.userId },
+        {
+          withCredentials: true,
+        }
+      );
+      toast.success("Order deleted successfully!");
+    } catch (error) {
+      toast.error("Deletion failed. Reverting changes.");
+      setOrders(originalOrders);
+      console.error("Failed to delete order:", error);
+    }
   };
 
   const handleActionClick = (orderId, action, updates) => {
@@ -113,23 +119,46 @@ const AdminOrders = () => {
     if (orderId && updates) {
       await updateOrderStatus(orderId, updates);
     }
-    setConfirmState({ isOpen: false, orderId: null, action: null, updates: {} });
+    setConfirmState({
+      isOpen: false,
+      orderId: null,
+      action: null,
+      updates: {},
+    });
   };
 
   const filteredOrders = useMemo(() => {
     if (!orders) return [];
     return orders.filter((order) => {
-      const { search, paymentStatus, paymentMethod, deliveryStatus, startDate, endDate } = filters;
+      const {
+        search,
+        paymentStatus,
+        paymentMethod,
+        deliveryStatus,
+        startDate,
+        endDate,
+      } = filters;
 
-      if (paymentStatus !== "all" && order.paymentStatus !== paymentStatus) return false;
-      if (paymentMethod !== "all" && order.paymentMethod !== paymentMethod) return false;
-      if (deliveryStatus !== "all" && order.status !== deliveryStatus) return false;
+      if (paymentStatus !== "all" && order.paymentStatus !== paymentStatus)
+        return false;
+      if (paymentMethod !== "all" && order.paymentMethod !== paymentMethod)
+        return false;
+      if (deliveryStatus !== "all" && order.status !== deliveryStatus)
+        return false;
       const searchMatch = search.toLowerCase();
-      if (searchMatch && !(order.user.name.toLowerCase().includes(searchMatch) || order.user.phoneNumber?.includes(searchMatch))) {
+      if (
+        searchMatch &&
+        !(
+          order.user.name.toLowerCase().includes(searchMatch) ||
+          order.user.phoneNumber?.includes(searchMatch)
+        )
+      ) {
         return false;
       }
       if (startDate || endDate) {
-        const orderDateString = new Date(order.createdAt).toISOString().slice(0, 10);
+        const orderDateString = new Date(order.createdAt)
+          .toISOString()
+          .slice(0, 10);
         if (startDate && orderDateString < startDate) return false;
         if (endDate && orderDateString > endDate) return false;
       }
@@ -138,12 +167,15 @@ const AdminOrders = () => {
   }, [orders, filters]);
 
   const summary = useMemo(() => {
-    if (!filteredOrders) return { totalPaid: 0, totalUnpaid: 0, notDeliveredCount: 0 };
+    if (!filteredOrders)
+      return { totalPaid: 0, totalUnpaid: 0, notDeliveredCount: 0 };
     return filteredOrders.reduce(
       (acc, order) => {
         if (order.status !== "cancelled") {
-            if (order.paymentStatus === "paid") acc.totalPaid += order.totalAmount;
-            if (order.paymentStatus === "unpaid") acc.totalUnpaid += order.totalAmount;
+          if (order.paymentStatus === "paid")
+            acc.totalPaid += order.totalAmount;
+          if (order.paymentStatus === "unpaid")
+            acc.totalUnpaid += order.totalAmount;
         }
         if (order.status === "pending") acc.notDeliveredCount += 1;
         return acc;
@@ -177,11 +209,19 @@ const AdminOrders = () => {
       />
       <ConfirmationDialog
         isOpen={confirmState.isOpen}
-        onClose={() => setConfirmState({ isOpen: false, orderId: null, action: null, updates: {} })}
+        onClose={() =>
+          setConfirmState({
+            isOpen: false,
+            orderId: null,
+            action: null,
+            updates: {},
+          })
+        }
         onConfirm={confirmAction}
         title={`Confirm Order ${confirmState.action}`}
       >
-        Are you sure you want to {confirmState.action?.toLowerCase()} this order?
+        Are you sure you want to {confirmState.action?.toLowerCase()} this
+        order?
       </ConfirmationDialog>
       <ConfirmationDialog
         isOpen={!!orderToDelete}
@@ -191,7 +231,8 @@ const AdminOrders = () => {
         confirmText="Yes, Delete"
         confirmColor="bg-red-600 hover:bg-red-700"
       >
-        Are you sure you want to permanently delete this order? This will also restock the items.
+        Are you sure you want to permanently delete this order? This will also
+        restock the items.
       </ConfirmationDialog>
 
       <h1 className="text-3xl font-bold mb-6">Manage Orders</h1>
@@ -228,16 +269,45 @@ const AdminOrders = () => {
               <div className="flex flex-wrap justify-between items-start gap-2 mb-4">
                 <div>
                   <p className="font-bold">{order.user.name}</p>
-                  <p className="text-sm text-gray-500">{order.user.phoneNumber}</p>
-                  <p className="text-xs text-gray-400 mt-1">{new Date(order.createdAt).toLocaleString()}</p>
+                  <p className="text-sm text-gray-500">
+                    {order.user.phoneNumber}
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    {new Date(order.createdAt).toLocaleString()}
+                  </p>
                 </div>
-                <div className="text-right">
-                  <p className="font-bold text-lg">₹{order.totalAmount.toFixed(2)}</p>
+                <div className="text-left md:text-right">
+                  <p className="font-bold text-lg">
+                    ₹{order.totalAmount.toFixed(2)}
+                  </p>
                   <div className="flex gap-2 justify-end mt-1">
-                    <span className={`px-2 py-1 text-xs font-semibold rounded-full ${order.paymentStatus === "paid" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}`}>
+                    <span
+                      className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                        order.paymentStatus === "paid"
+                          ? "bg-green-100 text-green-800"
+                          : "bg-yellow-100 text-yellow-800"
+                      }`}
+                    >
                       {order.paymentStatus}
                     </span>
-                    <span className={`px-2 py-1 text-xs font-semibold rounded-full ${order.status === "delivered" ? "bg-blue-100 text-blue-800" : order.status === "cancelled" ? "bg-red-100 text-red-800" : "bg-gray-100 text-gray-800"}`}>
+                    <span
+                      className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                        order.paymentMethod === "online"
+                          ? "bg-cyan-100 text-cyan-800"
+                          : "bg-purple-100 text-purple-800"
+                      }`}
+                    >
+                      {order.paymentMethod}
+                    </span>
+                    <span
+                      className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                        order.status === "delivered"
+                          ? "bg-blue-100 text-blue-800"
+                          : order.status === "cancelled"
+                          ? "bg-red-100 text-red-800"
+                          : "bg-gray-100 text-gray-800"
+                      }`}
+                    >
                       {order.status}
                     </span>
                   </div>
@@ -254,7 +324,11 @@ const AdminOrders = () => {
                 <div className="flex gap-2">
                   {order.paymentStatus === "unpaid" && (
                     <button
-                      onClick={() => handleActionClick(order._id, "Payment", { paymentStatus: "paid" })}
+                      onClick={() =>
+                        handleActionClick(order._id, "Payment", {
+                          paymentStatus: "paid",
+                        })
+                      }
                       className="btn-action bg-green-500 hover:bg-green-600"
                     >
                       Mark as Paid
@@ -262,26 +336,35 @@ const AdminOrders = () => {
                   )}
                   {order.status === "pending" && (
                     <button
-                      onClick={() => handleActionClick(order._id, "Delivery", { status: "delivered" })}
+                      onClick={() =>
+                        handleActionClick(order._id, "Delivery", {
+                          status: "delivered",
+                        })
+                      }
                       className="btn-action bg-blue-500 hover:bg-blue-600"
                     >
                       Mark as Delivered
                     </button>
                   )}
-                  {order.status !== "cancelled" && order.status !== "delivered" && (
-                    <button
-                      onClick={() => handleActionClick(order._id, "Cancellation", { status: "cancelled" })}
-                      className="btn-action bg-red-500 hover:bg-red-600"
-                    >
-                      Cancel Order
-                    </button>
-                  )}
+                  {order.status !== "cancelled" &&
+                    order.status !== "delivered" && (
+                      <button
+                        onClick={() =>
+                          handleActionClick(order._id, "Cancellation", {
+                            status: "cancelled",
+                          })
+                        }
+                        className="btn-action bg-red-500 hover:bg-red-600"
+                      >
+                        Cancel Order
+                      </button>
+                    )}
                   {order.status !== "delivered" && (
                     <button
-                        onClick={() => setOrderToDelete(order)}
-                        className="btn-action bg-gray-500 hover:bg-gray-600"
+                      onClick={() => setOrderToDelete(order)}
+                      className="btn-action bg-gray-500 hover:bg-gray-600"
                     >
-                        Delete
+                      Delete
                     </button>
                   )}
                 </div>
@@ -316,4 +399,3 @@ const AdminOrders = () => {
 };
 
 export default AdminOrders;
-
