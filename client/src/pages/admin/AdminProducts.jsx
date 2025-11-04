@@ -184,7 +184,7 @@ const AdminProducts = () => {
       {/*  */}
       <img src={p?.imageUrl} alt={p.name} className="w-full h-40 object-contain" /> {/* Changed from object-cover */}
       {p.featured && <span className="absolute top-2 left-2 bg-amber-400 text-amber-900 text-xs font-bold px-2 py-1 rounded">Featured</span>}
-      {p.offer && <span className="absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">{p.offer}</span>}
+      {p.offer && <span className="absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">{p.offer}Off</span>}
     </div>
     <div className="p-4 flex flex-col flex-grow">
       <h3 className="font-bold text-lg mb-1">{p.name}</h3>

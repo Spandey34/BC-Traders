@@ -139,7 +139,7 @@ const Products = () => {
                 }`}
               >
                 <div className="relative h-48 w-full overflow-hidden">
-                  {product.offer && <span className="absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">{product.offer}</span>}
+                  {product.offer && <span className="absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">{product.offer}Off</span>}
                   <img
                     src={product.imageUrl}
                     alt={product.name}
