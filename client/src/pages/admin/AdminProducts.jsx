@@ -179,36 +179,40 @@ const AdminProducts = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {filteredProducts.map(p => (
-                    <div key={p._id} className="bg-white dark:bg-gray-800 rounded-lg shadow-sm flex flex-col overflow-hidden border dark:border-gray-700">
-                        <div className="relative">
-                            <img src={p?.imageUrl} alt={p.name} className="w-full h-40 object-cover" />
-                            {p.featured && <span className="absolute top-2 left-2 bg-amber-400 text-amber-900 text-xs font-bold px-2 py-1 rounded">Featured</span>}
-                            {p.offer && <span className="absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">{p.offer}</span>}
-                        </div>
-                        <div className="p-4 flex flex-col flex-grow">
-                            <h3 className="font-bold text-lg mb-1">{p.name}</h3>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{p.quantity}</p>
-                            <div className="flex items-baseline gap-2">
-                                <p className="font-semibold text-xl">₹{p.sellingPrice}</p>
-                                <p className="line-through text-sm text-gray-500">₹{p.mrp}</p>
-                            </div>
-                            <p className="mt-1 text-sm">Stock: <span className="font-bold">{p.inStockCount > 0 ? p.inStockCount : <span className="text-red-500">Out of Stock</span>}</span></p>
-                            
-                            <div className="mt-auto pt-4 flex flex-col gap-2">
-                                <button
-                                    onClick={() => handleToggleFeatured(p)}
-                                    className={`w-full px-4 py-2 font-semibold text-white rounded-md transition-colors shadow-sm text-sm ${p.featured ? 'bg-amber-500 hover:bg-amber-600' : 'bg-green-500 hover:bg-green-600'}`}
-                                >
-                                    {p.featured ? 'Remove from Featured' : 'Make Featured'}
-                                </button>
-                                <div className="flex gap-2">
-                                    <button onClick={() => setEditingProduct(p)} className="px-4 py-2 font-semibold text-white rounded-md transition-colors shadow-sm bg-blue-500 hover:bg-blue-600 text-sm w-full">Edit</button>
-                                    <button onClick={() => setConfirmDelete(p)} className="px-4 py-2 font-semibold text-white rounded-md transition-colors shadow-sm bg-red-500 hover:bg-red-600 text-sm w-full">Delete</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                ))}
+  <div key={p._id} className="bg-white dark:bg-gray-800 rounded-lg shadow-sm flex flex-col overflow-hidden border dark:border-gray-700">
+    <div className="relative">
+      {/*  */}
+      <img src={p?.imageUrl} alt={p.name} className="w-full h-40 object-contain" /> {/* Changed from object-cover */}
+      {p.featured && <span className="absolute top-2 left-2 bg-amber-400 text-amber-900 text-xs font-bold px-2 py-1 rounded">Featured</span>}
+      {p.offer && <span className="absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">{p.offer}</span>}
+    </div>
+    <div className="p-4 flex flex-col flex-grow">
+      <h3 className="font-bold text-lg mb-1">{p.name}</h3>
+      {p.description&&<p className="text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-3">
+                    {p.description}
+                  </p>}
+      <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{p.quantity}</p>
+      <div className="flex items-baseline gap-2">
+        <p className="font-semibold text-xl">₹{p.sellingPrice}</p>
+        <p className="line-through text-sm text-gray-500">₹{p.mrp}</p>
+      </div>
+      <p className="mt-1 text-sm">Stock: <span className="font-bold">{p.inStockCount > 0 ? p.inStockCount : <span className="text-red-500">Out of Stock</span>}</span></p>
+      
+      <div className="mt-auto pt-4 flex flex-col gap-2">
+        <button
+          onClick={() => handleToggleFeatured(p)}
+          className={`w-full px-4 py-2 font-semibold text-white rounded-md transition-colors shadow-sm text-sm ${p.featured ? 'bg-amber-500 hover:bg-amber-600' : 'bg-green-500 hover:bg-green-600'}`}
+        >
+          {p.featured ? 'Remove from Featured' : 'Make Featured'}
+        </button>
+        <div className="flex gap-2">
+          <button onClick={() => setEditingProduct(p)} className="px-4 py-2 font-semibold text-white rounded-md transition-colors shadow-sm bg-blue-500 hover:bg-blue-600 text-sm w-full">Edit</button>
+          <button onClick={() => setConfirmDelete(p)} className="px-4 py-2 font-semibold text-white rounded-md transition-colors shadow-sm bg-red-500 hover:bg-red-600 text-sm w-full">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+))}
             </div>
         </div>
     );

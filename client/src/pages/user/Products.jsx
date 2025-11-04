@@ -43,7 +43,6 @@ const SearchIcon = ({ className = "w-5 h-5" }) => (
 
 // --- FeaturedProductsCarousel Component ---
 
-
 const Products = () => {
   const [products] = useProducts();
   const { addToCart } = useCart();
@@ -52,12 +51,12 @@ const Products = () => {
   // --- FIX START: Changed logic to return an array directly, not an object ---
   const featuredProducts = useMemo(() => {
     if (!Array.isArray(products)) {
-        return [];
+      return [];
     }
-    return products.filter(p => p.featured);
+    return products.filter((p) => p.featured);
   }, [products]);
   // --- FIX END ---
-  
+
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -105,7 +104,10 @@ const Products = () => {
   return (
     <div className="max-w-7xl mx-auto">
       <div className="p-4 md:p-6 pb-24 lg:pb-6">
-        <FeaturedProductsCarousel products={featuredProducts} addToCart={addToCart} />
+        <FeaturedProductsCarousel
+          products={featuredProducts}
+          addToCart={addToCart}
+        />
 
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
@@ -137,10 +139,12 @@ const Products = () => {
                 }`}
               >
                 <div className="relative h-48 w-full overflow-hidden">
+                  {product.offer && <span className="absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">{product.offer}</span>}
                   <img
                     src={product.imageUrl}
                     alt={product.name}
-                    className={`w-full h-full object-cover transition-transform duration-300 ${
+                    className={`w-full h-full object-contain transition-transform duration-300 ${
+                      // Changed from object-cover
                       product.inStockCount !== 0 ? "group-hover:scale-105" : ""
                     }`}
                   />
@@ -155,6 +159,9 @@ const Products = () => {
                 <div className="p-5">
                   <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-2 line-clamp-2 h-12">
                     {product.name}
+                    {product.description&&<p className="text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-3">
+                    {product.description}
+                  </p>}
                   </h3>
                   <div className="flex items-center justify-between mt-4">
                     <div>
