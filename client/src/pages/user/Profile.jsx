@@ -127,7 +127,7 @@ const Profile = () => {
                     </div>
                     
                     {/* Logout Button */}
-                    <div className="space-y-4 mb-15">
+                    <div className="space-y-4 mb-25">
                         <button onClick={() => signOut()} className="w-full bg-red-500 text-white py-4 rounded-xl font-semibold text-lg hover:bg-red-600 transition-colors duration-200 shadow-sm hover:shadow-md">
                             Logout
                         </button>
