@@ -112,7 +112,6 @@ export const placeOrder = async (req, res) => {
         ///68ec2861f9396536fa663578
         await newOrder.save();
         io.to(userSocketMap[user._id].socketId).emit('orderPlaced', newOrder);
-        io.emit('orderPlaced', newOrder);
         const productIds = newOrder.items.map(item => item.productId);
         const updatedProducts = await Product.find({ '_id': { $in: productIds } });
         if (updatedProducts.length > 0) {
