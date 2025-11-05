@@ -6,8 +6,7 @@ import { FiPackage } from "react-icons/fi";
 
 const Orders = () => {
     const { isSignedIn } = useUser();
-    // Using context instead of mock data
-    const [orders,setOrders] = useOrders();
+    const [orders, setOrders] = useOrders();
 
     return (
         <div className="">
@@ -17,7 +16,7 @@ const Orders = () => {
                     <p className="text-gray-600 dark:text-gray-400">Track and manage your orders</p>
                 </div>
 
-                {isSignedIn && orders? (
+                {isSignedIn && orders ? (
                     <div className="space-y-4">
                         {orders.map(order => (
                             <div key={order.id} className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow duration-300">
@@ -38,15 +37,28 @@ const Orders = () => {
                                 </div>
                                 
                                 <div className="border-t border-gray-200 dark:border-gray-600 pt-4">
-                                    <div className="flex justify-between items-center">
-                                        <div>
-                                            {order.items.map((item, index) => (
-                                                <p key={index} className="text-gray-600 dark:text-gray-400 text-sm">
+                                    <div className="space-y-2">
+                                        {order.items.map((item, index) => (
+                                            <div key={index} className="flex justify-between items-center text-sm">
+                                                <span className="text-gray-600 dark:text-gray-400">
                                                     {item.quantity}x {item.name}
-                                                </p>
-                                            ))}
+                                                </span>
+                                                <span className="text-gray-700 dark:text-gray-300">
+                                                    ₹{item.quantity * item.price}
+                                                </span>
+                                            </div>
+                                        ))}
+                                        
+                                        <div className="pt-2">
+                                            <div className="border-t border-gray-200 dark:border-gray-700"></div>
                                         </div>
-                                        <p className="font-bold text-xl text-gray-800 dark:text-gray-100">₹{order.totalAmount}</p>
+
+                                        <div className="flex justify-between items-center">
+                                            <span className="font-semibold text-lg text-gray-800 dark:text-gray-100">Total</span>
+                                            <span className="font-bold text-xl text-gray-800 dark:text-gray-100">
+                                                ₹{order.totalAmount}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -60,12 +72,12 @@ const Orders = () => {
                         <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">No orders yet</h3>
                         {
                             isSignedIn ? "" : <>
-                              <p className="text-gray-500 dark:text-gray-400 mb-6">Please log in to view your orders</p>
-                        <SignInButton mode="modal">
-                           <button className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-shadow duration-200">
-                               Sign In to View Orders
-                           </button>
-                        </SignInButton>
+                                <p className="text-gray-500 dark:text-gray-400 mb-6">Please log in to view your orders</p>
+                                <SignInButton mode="modal">
+                                    <button className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-shadow duration-200">
+                                        Sign In to View Orders
+                                    </button>
+                                </SignInButton>
                             </>
                         }
                         
