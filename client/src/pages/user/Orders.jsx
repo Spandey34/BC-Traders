@@ -26,11 +26,14 @@ const Orders = () => {
                                         <p className="font-bold text-lg text-gray-800 dark:text-gray-100">{order.id}</p>
                                         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Placed on: {new Date(order.createdAt).toLocaleDateString()}</p>
                                     </div>
-                                    <span className={`mt-2 sm:mt-0 px-3 py-1 text-sm font-semibold rounded-full ${order.status === 'Delivered' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'}`}>
+                                    <span className={`mt-2 sm:mt-0 px-3 py-1 text-sm font-semibold rounded-full ${order.status === 'delivered' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'}`}>
                                         {order.status}
                                     </span>
-                                    <span className={`mt-2 sm:mt-0 px-3 py-1 text-sm font-semibold rounded-full ${order.status === 'Delivered' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'}`}>
+                                    <span className={`mt-2 sm:mt-0 px-3 py-1 text-sm font-semibold rounded-full ${order.paymentStatus === 'paid' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'}`}>
                                         {order.paymentStatus}
+                                    </span>
+                                    <span className={`mt-2 sm:mt-0 px-3 py-1 text-sm font-semibold rounded-full ${order.paymentMethod === 'online' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300' : 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-300'}`}>
+                                        {order.paymentMethod}
                                     </span>
                                 </div>
                                 

@@ -24,13 +24,13 @@ const FeaturedProductsCarousel = ({ products, addToCart }) => {
       return () => clearInterval(slideInterval);
     }
   }, [nextSlide, products]);
-  
+
   // --- FIX START: Display a message if there are no featured products ---
   if (!products || products.length === 0) {
     return (
-        <div className="h-[50vh] md:h-[60vh] w-full m-auto mb-8 relative group flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-2xl">
-            <p className="text-xl text-gray-500">No featured products yet.</p>
-        </div>
+      <div className="h-[50vh] md:h-[60vh] w-full m-auto mb-8 relative group flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-2xl">
+        <p className="text-xl text-gray-500">No featured products yet.</p>
+      </div>
     );
   }
   // --- FIX END ---
@@ -85,21 +85,9 @@ const FeaturedProductsCarousel = ({ products, addToCart }) => {
         <FiChevronRight className="w-8 h-8" />
       </div>
       <div className="flex justify-center py-2 absolute bottom-4 right-0 left-0">
-        {products.map((_, i) => (
-          <div
-            key={i}
-            onClick={() => setCurrentIndex(i)}
-            className={`cursor-pointer transition-all mx-1 ${
-              currentIndex === i ? "p-1.5" : "p-1 opacity-50"
-            }`}
-          >
-            <div
-              className={`w-2 h-2 rounded-full ${
-                currentIndex === i ? "bg-white" : "bg-gray-400"
-              }`}
-            ></div>
-          </div>
-        ))}
+        <div className="bg-black/50 text-white text-xs font-semibold px-2.5 py-1 rounded-full">
+          {currentIndex + 1} / {products.length}
+        </div>
       </div>
     </div>
   );
