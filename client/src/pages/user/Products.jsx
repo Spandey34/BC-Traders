@@ -127,7 +127,7 @@ const Products = () => {
           </div>
         </div>
 
-        <div className="grid mb-20 grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid mb-20 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product) => (
               <div
@@ -139,15 +139,12 @@ const Products = () => {
                 }`}
               >
                 <div className="relative h-48 w-full overflow-hidden">
-                  {product.offer && (
-                    <span className="absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">
-                      {product.offer}Off
-                    </span>
-                  )}
+                  {product.offer && <span className="absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">{product.offer}Off</span>}
                   <img
                     src={product.imageUrl}
                     alt={product.name}
                     className={`w-full h-full object-contain transition-transform duration-300 ${
+                      // Changed from object-cover
                       product.inStockCount !== 0 ? "group-hover:scale-105" : ""
                     }`}
                   />
@@ -162,15 +159,11 @@ const Products = () => {
                 <div className="p-5">
                   <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-2 line-clamp-2 h-12">
                     {product.name}
-                    {product.description && (
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-3">
-                        {product.description}
-                      </p>
-                    )}
+                    {product.description&&<p className="text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-3">
+                    {product.description}
+                  </p>}
                   </h3>
-
-                  {/* --- THIS IS THE FIXED SECTION --- */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between mt-4 gap-4 sm:gap-0">
+                  <div className="flex items-center justify-between mt-4">
                     <div>
                       <div className="flex items-center gap-2">
                         <p className="text-xl font-bold text-emerald-600 dark:text-emerald-400">
@@ -192,7 +185,7 @@ const Products = () => {
                         onClick={() => {
                           addToCart(product);
                         }}
-                        className="flex items-center justify-center gap-2 px-4 py-2 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
+                        className="flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
                         aria-label={`Add ${product.name} to cart`}
                       >
                         <ShoppingCartIcon className="w-4 h-4" /> Add
@@ -203,7 +196,6 @@ const Products = () => {
                       </div>
                     )}
                   </div>
-                  {/* --- END OF FIXED SECTION --- */}
                 </div>
               </div>
             ))
