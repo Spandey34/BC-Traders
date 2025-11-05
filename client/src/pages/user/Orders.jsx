@@ -37,7 +37,7 @@ const Orders = () => {
                       {new Date(order.createdAt).toLocaleDateString()}
                     </p>
                   </div>
-                  <div className="flex " >
+                  <div className="flex space-x-2" >
                     <span
                       className={`mt-2 sm:mt-0 px-3 py-1 text-sm font-semibold rounded-full ${
                         order.status === "delivered"
